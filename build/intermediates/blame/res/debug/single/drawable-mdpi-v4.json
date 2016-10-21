@@ -1,0 +1,38 @@
+[
+    {
+        "merged": "C:\\Users\\wayne\\workspace\\NfcSeal\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\ic_unlock.png",
+        "source": "C:\\Users\\wayne\\workspace\\NfcSeal\\res\\drawable-mdpi\\ic_unlock.png"
+    },
+    {
+        "merged": "C:\\Users\\wayne\\workspace\\NfcSeal\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\ic_aboutme.png",
+        "source": "C:\\Users\\wayne\\workspace\\NfcSeal\\res\\drawable-mdpi\\ic_aboutme.png"
+    },
+    {
+        "merged": "C:\\Users\\wayne\\workspace\\NfcSeal\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\ic_signin2.png",
+        "source": "C:\\Users\\wayne\\workspace\\NfcSeal\\res\\drawable-mdpi\\ic_signin2.png"
+    },
+    {
+        "merged": "C:\\Users\\wayne\\workspace\\NfcSeal\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\ic_launcher.png",
+        "source": "C:\\Users\\wayne\\workspace\\NfcSeal\\res\\drawable-mdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "C:\\Users\\wayne\\workspace\\NfcSeal\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\ic_signin.png",
+        "source": "C:\\Users\\wayne\\workspace\\NfcSeal\\res\\drawable-mdpi\\ic_signin.png"
+    },
+    {
+        "merged": "C:\\Users\\wayne\\workspace\\NfcSeal\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\ic_language.png",
+        "source": "C:\\Users\\wayne\\workspace\\NfcSeal\\res\\drawable-mdpi\\ic_language.png"
+    },
+    {
+        "merged": "C:\\Users\\wayne\\workspace\\NfcSeal\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\ic_more.png",
+        "source": "C:\\Users\\wayne\\workspace\\NfcSeal\\res\\drawable-mdpi\\ic_more.png"
+    },
+    {
+        "merged": "C:\\Users\\wayne\\workspace\\NfcSeal\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\ic_inquiry.png",
+        "source": "C:\\Users\\wayne\\workspace\\NfcSeal\\res\\drawable-mdpi\\ic_inquiry.png"
+    },
+    {
+        "merged": "C:\\Users\\wayne\\workspace\\NfcSeal\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\ic_lock.png",
+        "source": "C:\\Users\\wayne\\workspace\\NfcSeal\\res\\drawable-mdpi\\ic_lock.png"
+    }
+]

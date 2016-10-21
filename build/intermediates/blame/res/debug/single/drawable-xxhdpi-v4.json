@@ -1,0 +1,42 @@
+[
+    {
+        "merged": "C:\\Users\\wayne\\workspace\\NfcSeal\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi-v4\\ic_language.png",
+        "source": "C:\\Users\\wayne\\workspace\\NfcSeal\\res\\drawable-xxhdpi\\ic_language.png"
+    },
+    {
+        "merged": "C:\\Users\\wayne\\workspace\\NfcSeal\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi-v4\\ic_company.png",
+        "source": "C:\\Users\\wayne\\workspace\\NfcSeal\\res\\drawable-xxhdpi\\ic_company.png"
+    },
+    {
+        "merged": "C:\\Users\\wayne\\workspace\\NfcSeal\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi-v4\\ic_aboutme.png",
+        "source": "C:\\Users\\wayne\\workspace\\NfcSeal\\res\\drawable-xxhdpi\\ic_aboutme.png"
+    },
+    {
+        "merged": "C:\\Users\\wayne\\workspace\\NfcSeal\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi-v4\\ic_unlock.png",
+        "source": "C:\\Users\\wayne\\workspace\\NfcSeal\\res\\drawable-xxhdpi\\ic_unlock.png"
+    },
+    {
+        "merged": "C:\\Users\\wayne\\workspace\\NfcSeal\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi-v4\\ic_lock.png",
+        "source": "C:\\Users\\wayne\\workspace\\NfcSeal\\res\\drawable-xxhdpi\\ic_lock.png"
+    },
+    {
+        "merged": "C:\\Users\\wayne\\workspace\\NfcSeal\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi-v4\\ic_signin.png",
+        "source": "C:\\Users\\wayne\\workspace\\NfcSeal\\res\\drawable-xxhdpi\\ic_signin.png"
+    },
+    {
+        "merged": "C:\\Users\\wayne\\workspace\\NfcSeal\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi-v4\\ic_inquiry.png",
+        "source": "C:\\Users\\wayne\\workspace\\NfcSeal\\res\\drawable-xxhdpi\\ic_inquiry.png"
+    },
+    {
+        "merged": "C:\\Users\\wayne\\workspace\\NfcSeal\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi-v4\\ic_launcher.png",
+        "source": "C:\\Users\\wayne\\workspace\\NfcSeal\\res\\drawable-xxhdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "C:\\Users\\wayne\\workspace\\NfcSeal\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi-v4\\ic_more.png",
+        "source": "C:\\Users\\wayne\\workspace\\NfcSeal\\res\\drawable-xxhdpi\\ic_more.png"
+    },
+    {
+        "merged": "C:\\Users\\wayne\\workspace\\NfcSeal\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi-v4\\ic_signin2.png",
+        "source": "C:\\Users\\wayne\\workspace\\NfcSeal\\res\\drawable-xxhdpi\\ic_signin2.png"
+    }
+]

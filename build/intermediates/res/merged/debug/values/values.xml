@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Smart Seal</string>
+    <string name="common_Todo">Sorry the function hasn\'t been done yet</string>
+    <string name="hint_account_no">User name</string>
+    <string name="hint_language">Language Switch</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_sign_in">Signin</string>
+    <string name="label_about_us">About Us</string>
+    <string name="label_change_password">Change Password</string>
+    <string name="label_check_update">Check Update</string>
+    <string name="label_clear_cache">Clear Cache</string>
+    <string name="label_company_name">Company Name</string>
+    <string name="label_confirmation">Confirm</string>
+    <string name="label_confirmed_password">Confirm Password</string>
+    <string name="label_contact">Contact Person</string>
+    <string name="label_contact_phoneNumber">Phone Number</string>
+    <string name="label_email_address">Email Address</string>
+    <string name="label_exception_reason">Reason</string>
+    <string name="label_personal_info">Personal Information</string>
+    <string name="label_place"> At</string>
+    <string name="label_position_diagnose">Location Diagnosis</string>
+    <string name="label_sealNo">Please enter Seal No.</string>
+    <string name="label_submit_feedbacks">Submit Feedbacks</string>
+    <string name="label_tag_missed">Seal Missed or Damaged</string>
+    <string name="label_tag_unidentified">Seal Unidentified</string>
+    <string name="label_time"> At</string>
+    <string name="lock_carriage_no">Enter Reference No. (e.g. Container No)</string>
+    <string name="lock_confirmation">Confirm</string>
+    <string name="lock_place">Sealed At </string>
+    <string name="lock_tag_prompt">Tap the seal...</string>
+    <string name="lock_take_picture">Please Take Picture</string>
+    <string name="lock_time">Sealed At </string>
+    <string name="login_failed">Wrong user name or password, please try it again.</string>
+    <string name="login_login">Login</string>
+    <string name="login_password">Password</string>
+    <string name="login_password_hint">Please enter password.</string>
+    <string name="login_register">Register</string>
+    <string name="login_remember_me">Remember password</string>
+    <string name="login_user_name">User Name</string>
+    <string name="login_user_name_hint">Please enter user name.</string>
+    <string name="main_aboutMe">About Me</string>
+    <string name="main_inquiry">Inquiry</string>
+    <string name="main_lock">Sealing </string>
+    <string name="main_more">More</string>
+    <string name="main_signin">Signin</string>
+    <string name="main_unlock">Unsealing</string>
+    <string name="operator">Operator</string>
+    <string name="prompt_address_missed">Location address hasn\'t been parsed yet, please wait a minute...</string>
+    <string name="prompt_adhoc_unlock_success">Exception Report Successed</string>
+    <string name="prompt_at_least_one_photo">Please take a picture at least</string>
+    <string name="prompt_exit_alert">Tap BACK again, and the app will exit.</string>
+    <string name="prompt_inquiry">Inquiry</string>
+    <string name="prompt_inquiry_failed">Inquiry Failed</string>
+    <string name="prompt_internet_connection_broken">No Access to Internet, Please Check Your Device\'s Network Connection.</string>
+    <string name="prompt_location_missed">Location missed, please make sure Position service is running and wait for locating completion.</string>
+    <string name="prompt_lock">Sealed </string>
+    <string name="prompt_lock_failed">Seal Failed</string>
+    <string name="prompt_lock_success">Seal Successed</string>
+    <string name="prompt_login">Login</string>
+    <string name="prompt_main">Workspace</string>
+    <string name="prompt_no_available_seal_No">Valid Seal No. Not Found</string>
+    <string name="prompt_no_available_tag">No Valid Seal</string>
+    <string name="prompt_no_carriage_id">Please Enter Reference No.</string>
+    <string name="prompt_no_enter">Please enter </string>
+    <string name="prompt_other_reason_missed">Please enter other reason.</string>
+    <string name="prompt_password_not_match">Two Passwords Not Matched</string>
+    <string name="prompt_signIn">Signin</string>
+    <string name="prompt_signin_complete">Signin Completed</string>
+    <string name="prompt_signin_failed">Signin Failed</string>
+    <string name="prompt_system_error">System Error, please try it again later.</string>
+    <string name="prompt_tag_invalid">Invalid Seal</string>
+    <string name="prompt_tag_lockable">Seal is ready for use. </string>
+    <string name="prompt_tag_no_record">Seal isn\'t recorded in System Repository.</string>
+    <string name="prompt_tag_not_read_lock_info">Can\'t Read Sealing Info</string>
+    <string name="prompt_tag_status_exceptional">Exceptional</string>
+    <string name="prompt_tag_status_locked">Sealed</string>
+    <string name="prompt_tag_status_other">Other</string>
+    <string name="prompt_tag_status_signedin">Signed In</string>
+    <string name="prompt_tag_status_unlocked">Unsealed</string>
+    <string name="prompt_tag_unlockable">Seal is in use, and can\'t be sealed again.</string>
+    <string name="prompt_tag_unlocked">Seal has been unsealed, and can\'t be used again.</string>
+    <string name="prompt_tagging_success">Scan Successed. Seal No.</string>
+    <string name="prompt_unlock">Unseal</string>
+    <string name="prompt_unlock_failed">Unseal Failed</string>
+    <string name="prompt_unlock_need_a_photo">A Picture Required After Unsealing</string>
+    <string name="prompt_unlock_success">Unseal Successed</string>
+    <string name="tag_not_found_prompt">Something wrong with it?</string>
+    <string name="take_picture">Take Picture</string>
+    <string name="title_adhoc_unlock">Unseal Exception Report</string>
+    <string name="unlock_check_seal_info">Please check seal information and pictures.</string>
+    <string name="unlock_confirmation">Confirm</string>
+    <string name="unlock_take_picture">Please unseal and take picture.</string>
+    <string name="words_missed_address_prefix">The address of coordinate </string>
+    <string name="words_missed_address_suffix"> hasn\'t been parsed yet.</string>
+    <style name="AppBaseTheme" parent="android:Theme">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style>
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+</resources>

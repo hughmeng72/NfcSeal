@@ -1,0 +1,26 @@
+[
+    {
+        "merged": "C:\\Users\\wayne\\workspace\\NfcSeal\\build\\intermediates\\res\\merged\\debug\\drawable\\button_text_color.xml",
+        "source": "C:\\Users\\wayne\\workspace\\NfcSeal\\res\\drawable\\button_text_color.xml"
+    },
+    {
+        "merged": "C:\\Users\\wayne\\workspace\\NfcSeal\\build\\intermediates\\res\\merged\\debug\\drawable\\button_shape_regiester.xml",
+        "source": "C:\\Users\\wayne\\workspace\\NfcSeal\\res\\drawable\\button_shape_regiester.xml"
+    },
+    {
+        "merged": "C:\\Users\\wayne\\workspace\\NfcSeal\\build\\intermediates\\res\\merged\\debug\\drawable\\border.xml",
+        "source": "C:\\Users\\wayne\\workspace\\NfcSeal\\res\\drawable\\border.xml"
+    },
+    {
+        "merged": "C:\\Users\\wayne\\workspace\\NfcSeal\\build\\intermediates\\res\\merged\\debug\\drawable\\button_shape.xml",
+        "source": "C:\\Users\\wayne\\workspace\\NfcSeal\\res\\drawable\\button_shape.xml"
+    },
+    {
+        "merged": "C:\\Users\\wayne\\workspace\\NfcSeal\\build\\intermediates\\res\\merged\\debug\\drawable\\button_shape_lock.xml",
+        "source": "C:\\Users\\wayne\\workspace\\NfcSeal\\res\\drawable\\button_shape_lock.xml"
+    },
+    {
+        "merged": "C:\\Users\\wayne\\workspace\\NfcSeal\\build\\intermediates\\res\\merged\\debug\\drawable\\button_shape_unlock.xml",
+        "source": "C:\\Users\\wayne\\workspace\\NfcSeal\\res\\drawable\\button_shape_unlock.xml"
+    }
+]
