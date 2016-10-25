@@ -166,10 +166,10 @@ public class CarriageListFragment extends ListFragment {
 
 					updateUI();
 				} else {
-					Toast.makeText(getActivity(), R.string.prompt_inquiry_failed, Toast.LENGTH_LONG).show();
+					Toast.makeText(getActivity().getApplicationContext(), R.string.prompt_inquiry_failed, Toast.LENGTH_LONG).show();
 				}
 			} catch (Exception e) {
-				Toast.makeText(getActivity(), R.string.prompt_inquiry_failed, Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity().getApplicationContext(), R.string.prompt_inquiry_failed, Toast.LENGTH_LONG).show();
 				e.printStackTrace();
 			}
 		}

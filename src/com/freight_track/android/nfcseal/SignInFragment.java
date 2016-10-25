@@ -57,10 +57,10 @@ public class SignInFragment extends Fragment {
             mLastLocation = loc;
             mLocationMaster.setKeptLocation(loc);
 
-            if (Utils.getCurrentLanguage().equals("en-US")) {
-                ReverseGeocodingTask task = new ReverseGeocodingTask();
-                task.execute(loc);
-            }
+//            if (Utils.getCurrentLanguage().equals("en-US")) {
+//            }
+            ReverseGeocodingTask task = new ReverseGeocodingTask();
+            task.execute(loc);
         }
     };
 
@@ -399,9 +399,11 @@ public class SignInFragment extends Fragment {
         protected void onPostExecute(String result) {
             Log.i(TAG, "ReverseGeocodingTask onPostExecute Result: " + result);
 
-            getActivity().setProgressBarIndeterminateVisibility(false);
-
             try {
+                if (getActivity() instanceof SignInActivity) {
+                    getActivity().setProgressBarIndeterminateVisibility(false);
+                }
+
                 if (result != null) {
                     mLocationMaster.setAddress(result);
                 } else {
