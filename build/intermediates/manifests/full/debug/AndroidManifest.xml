@@ -44,7 +44,7 @@
             android:value="5954e229991f91ea8277c41c1ca77343" />
 
         <activity
-            android:name="com.freight_track.android.nfcseal.MainActivity"
+            android:name="com.freight_track.android.nfcseal.activity.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -54,7 +54,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.freight_track.android.nfcseal.LockActivity"
+            android:name="com.freight_track.android.nfcseal.activity.LockActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -64,7 +64,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.freight_track.android.nfcseal.UnlockActivity"
+            android:name="com.freight_track.android.nfcseal.activity.UnlockActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -79,17 +79,17 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.freight_track.android.nfcseal.CarriageListActivity"
+            android:name="com.freight_track.android.nfcseal.activity.CarriageListActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.freight_track.android.nfcseal.OperationListActivity"
+            android:name="com.freight_track.android.nfcseal.activity.OperationListActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.freight_track.android.nfcseal.SignInActivity"
+            android:name="com.freight_track.android.nfcseal.activity.SignInActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -99,27 +99,27 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.freight_track.android.nfcseal.webActivity"
+            android:name="com.freight_track.android.nfcseal.activity.webActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.freight_track.android.nfcseal.RegisterActivity"
+            android:name="com.freight_track.android.nfcseal.activity.RegisterActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.freight_track.android.nfcseal.AboutMeActivity"
+            android:name="com.freight_track.android.nfcseal.activity.AboutMeActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.freight_track.android.nfcseal.MoreActivity"
+            android:name="com.freight_track.android.nfcseal.activity.MoreActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.freight_track.android.nfcseal.LocationDiagnosisActivity"
+            android:name="com.freight_track.android.nfcseal.activity.LocationDiagnosisActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>

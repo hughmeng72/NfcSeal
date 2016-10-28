@@ -45,7 +45,7 @@
         <meta-data android:name="com.amap.api.v2.apikey" android:value="5954e229991f91ea8277c41c1ca77343" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" 
             >
@@ -57,7 +57,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LockActivity"
+            android:name=".activity.LockActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -67,7 +67,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".UnlockActivity"
+            android:name=".activity.UnlockActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" 
             >
@@ -83,17 +83,17 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".CarriageListActivity"
+            android:name=".activity.CarriageListActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".OperationListActivity"
+            android:name=".activity.OperationListActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".SignInActivity"
+            android:name=".activity.SignInActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -103,27 +103,27 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".webActivity"
+            android:name=".activity.webActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".RegisterActivity"
+            android:name=".activity.RegisterActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".AboutMeActivity"
+            android:name=".activity.AboutMeActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".MoreActivity"
+            android:name=".activity.MoreActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".LocationDiagnosisActivity"
+            android:name=".activity.LocationDiagnosisActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>

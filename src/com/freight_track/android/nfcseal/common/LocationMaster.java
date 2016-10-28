@@ -10,14 +10,15 @@ import android.util.Log;
 public class LocationMaster {
     private static final String TAG = "LocationMaster";
 
-    public static final String ACTION_LOCATION = "com.freight_track.android.nfcseal.ACTION_LOCATION";
-    
     private static LocationMaster sLocationMaster;
+
     private Context mAppContext;
     private LocationManager mLocationManager;
     private Location mKeptLocation;
     private String mAddress;
-    
+
+    public static final String ACTION_LOCATION = "com.freight_track.android.nfcseal.ACTION_LOCATION";
+
     public String getAddress() {
 		return mAddress;
 	}
@@ -73,7 +74,6 @@ public class LocationMaster {
         }
     	else {
             Log.i(TAG, "Got last known location from GPS");
-    		
     	}
         
         if (lastKnown != null) {
