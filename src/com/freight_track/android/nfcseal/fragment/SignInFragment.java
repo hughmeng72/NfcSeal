@@ -54,9 +54,10 @@ public class SignInFragment extends Fragment {
 
     private Location mLastLocation;
     private String mLastAddress;
-    private LocationMaster mLocationMaster;
-    private BroadcastReceiver mLocationReceiver = new LocationReceiver() {
 
+    private LocationMaster mLocationMaster;
+
+    private BroadcastReceiver mLocationReceiver = new LocationReceiver() {
         @Override
         protected void onLocationReceived(Context context, Location loc) {
             Log.d(TAG, loc.toString());

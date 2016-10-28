@@ -14,6 +14,7 @@ public class LocationMaster {
 
     private Context mAppContext;
     private LocationManager mLocationManager;
+
     private Location mKeptLocation;
     private String mAddress;
 
