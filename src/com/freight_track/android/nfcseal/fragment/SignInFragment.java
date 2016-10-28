@@ -52,7 +52,7 @@ public class SignInFragment extends Fragment {
     private static String TAG = "SignInFragment";
     private Seal mSeal;
 
-    private Location mLastLocation;
+    private String mLastLocation;
     private String mLastAddress;
 
     private LocationMaster mLocationMaster;
@@ -62,8 +62,8 @@ public class SignInFragment extends Fragment {
         protected void onLocationReceived(Context context, Location loc) {
             Log.d(TAG, loc.toString());
 
-            mLastLocation = loc;
-            mLocationMaster.setKeptLocation(loc);
+            mLastLocation = String.format("%1$f,%2$f", loc.getLatitude(), loc.getLongitude());
+            mLocationMaster.setLastCoordinate(mLastLocation);
 
             ReverseGeocodingTask task = new ReverseGeocodingTask();
             task.execute(loc);
@@ -79,10 +79,10 @@ public class SignInFragment extends Fragment {
         mSeal = new Seal(getActivity().getApplicationContext());
 
         mLocationMaster = LocationMaster.get(getActivity());
-        mLastLocation = mLocationMaster.getKeptLocation();
+        mLastLocation = mLocationMaster.getLastCoordinate();
         mLastAddress = mLocationMaster.getAddress();
 
-        mLocationMaster.startLocationUpdates();
+        mLocationMaster.startLocationUpdates(mLocationListener);
 
         Log.d(TAG, User.get().getTOKEN());
     }
@@ -174,16 +174,15 @@ public class SignInFragment extends Fragment {
     }
 
     private void doSignIn() {
-
         if (mLastLocation == null) {
             Toast toast = Toast.makeText(getActivity(), R.string.prompt_location_missed, Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
         } else {
-            mSeal.setLocation(String.format("%1$s,%2$s", String.valueOf(mLastLocation.getLatitude()), String.valueOf(mLastLocation.getLongitude())));
+            mSeal.setLocation(mLastLocation);
         }
 
-        if (Utils.getCurrentLanguage().equals("en-US") && (mLastAddress == null || mLastAddress.isEmpty())) {
+        if (mLastAddress == null || mLastAddress.isEmpty()) {
             mSeal.setPlace(getString(R.string.words_missed_address_prefix) + mSeal.getLocation() + getString(R.string.words_missed_address_suffix));
         } else {
             mSeal.setPlace(mLastAddress);

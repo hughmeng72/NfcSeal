@@ -77,7 +77,7 @@ public class LockFragment extends Fragment {
 
     private Seal mSeal;
     private LocationMaster mLocationMaster;
-    private Location mLastLocation;
+    private String mLastLocation;
     private String mLastAddress;
 
     private BroadcastReceiver mLocationReceiver = new LocationReceiver() {
@@ -86,8 +86,8 @@ public class LockFragment extends Fragment {
         protected void onLocationReceived(Context context, Location loc) {
             Log.d(TAG, loc.toString());
 
-            mLastLocation = loc;
-            mLocationMaster.setKeptLocation(loc);
+            mLastLocation = String.format("%1$f,%2$f",loc.getLatitude(), loc.getLongitude());
+            mLocationMaster.setLastCoordinate(mLastLocation);
 
             if (Utils.getCurrentLanguage().equals("en-US")) {
                 ReverseGeocodingTask task = new ReverseGeocodingTask();
@@ -104,10 +104,10 @@ public class LockFragment extends Fragment {
         mSeal = new Seal(getActivity().getApplicationContext());
 
         mLocationMaster = LocationMaster.get(getActivity());
-        mLastLocation = mLocationMaster.getKeptLocation();
+        mLastLocation = mLocationMaster.getLastCoordinate();
         mLastAddress = mLocationMaster.getAddress();
 
-        mLocationMaster.startLocationUpdates();
+        mLocationMaster.startLocationUpdates(mLocationListener);
 
         Log.d(TAG, User.get().getTOKEN());
     }
@@ -396,7 +396,7 @@ public class LockFragment extends Fragment {
 
             return;
         } else {
-            mSeal.setLocation(String.format("%1$s,%2$s", String.valueOf(mLastLocation.getLatitude()), String.valueOf(mLastLocation.getLongitude())));
+            mSeal.setLocation(mLastLocation);
         }
 
         if (Utils.getCurrentLanguage().equals("en-US") && (mLastAddress == null || mLastAddress.isEmpty())) {

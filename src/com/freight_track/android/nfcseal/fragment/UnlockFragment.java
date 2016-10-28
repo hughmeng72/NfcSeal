@@ -74,16 +74,17 @@ public class UnlockFragment extends Fragment {
     private Seal mSeal;
     ThumbnailDownloader<ImageView> mThumbnailThread;
 
-    private Location mLastLocation;
+    private String mLastLocation;
     private String mLastAddress;
+
     private LocationMaster mLocationMaster;
     private BroadcastReceiver mLocationReceiver = new LocationReceiver() {
         @Override
         protected void onLocationReceived(Context context, Location loc) {
             Log.d(TAG, loc.toString());
 
-            mLastLocation = loc;
-            mLocationMaster.setKeptLocation(loc);
+            mLastLocation = String.format("%1$f,%2%f", loc.getLatitude(), loc.getLongitude());
+            mLocationMaster.setLastCoordinate(mLastLocation);
 
             if (Utils.getCurrentLanguage().equals("en-US")) {
                 ReverseGeocodingTask task = new ReverseGeocodingTask();
@@ -131,10 +132,10 @@ public class UnlockFragment extends Fragment {
         mSeal = new Seal(getActivity().getApplicationContext());
 
         mLocationMaster = LocationMaster.get(getActivity());
-        mLastLocation = mLocationMaster.getKeptLocation();
+        mLastLocation = mLocationMaster.getLastCoordinate();
         mLastAddress = mLocationMaster.getAddress();
 
-        mLocationMaster.startLocationUpdates();
+        mLocationMaster.startLocationUpdates(mLocationListener);
 
         mThumbnailThread = new ThumbnailDownloader<ImageView>(new Handler());
         mThumbnailThread.setListener(new ThumbnailDownloader.Listener<ImageView>() {
@@ -379,8 +380,7 @@ public class UnlockFragment extends Fragment {
 
             return;
         } else {
-            mSeal.setLocation(String.format("%1$s,%2$s", String.valueOf(mLastLocation.getLatitude()),
-                    String.valueOf(mLastLocation.getLongitude())));
+            mSeal.setLocation(mLastLocation);
         }
 
         if (Utils.getCurrentLanguage().equals("en-US") && (mLastAddress == null || mLastAddress.isEmpty())) {

@@ -18,9 +18,6 @@ import com.freight_track.android.nfcseal.fragment.SignInFragment;
 
 public class SignInActivity extends SingleFragmentActivity {
 
-    private LocationClient mLocationClient;
-    private NotiftLocationListener mLocationListener;
-
     @Override
 	protected Fragment createFragment() {
 		// TODO Auto-generated method stub
@@ -42,47 +39,5 @@ public class SignInActivity extends SingleFragmentActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		super.onCreate(savedInstanceState);
-
-        initLocationClient();
 	}
-
-    // Initialize Baidu Location Client
-    private void initLocationClient() {
-        mLocationListener = new NotiftLocationListener() {
-            @Override
-            public void onReceiveLocation(BDLocation location) {
-                super.onReceiveLocation(location);
-
-                Toast.makeText(getApplicationContext(), String.format("Location: %1$s (%2$f, %3$f)", location.getAddress().address, location.getLatitude(), location.getLongitude()), Toast.LENGTH_LONG).show();
-            }
-        };
-
-        LocationClientOption option = new LocationClientOption();
-        option.setIsNeedAddress(true);
-
-        mLocationClient = new LocationClient(getApplicationContext());
-        mLocationClient.setLocOption(option);
-    }
-
-	@Override
-	protected void onStart() {
-		super.onStart();
-
-        if (Utils.CheckChineseLanguage()) {
-            mLocationClient.registerLocationListener(mLocationListener);
-            mLocationClient.start();
-        }
-	}
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-        if (mLocationClient != null) {
-            mLocationClient.stop();
-            mLocationClient = null;
-        }
-
-        mLocationListener = null;
-    }
 }

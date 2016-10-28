@@ -52,20 +52,21 @@ public class LocationDiagnosisFragment extends Fragment {
     private Button mDiagnoseButton;
     private Button mShowMapButton;
 
-    private Location mLastLocation;
+    private String mLastLocation;
     private LocationMaster mLocationMaster;
     private BroadcastReceiver mLocationReceiver = new LocationReceiver() {
 
         @Override
         protected void onLocationReceived(Context context, Location loc) {
             Log.d(TAG, loc.toString());
-            mLastLocation = loc;
-            Log.i(TAG, getString(R.string.words_missed_address_prefix) + String.format("%1$s,%2$s", String.valueOf(mLastLocation.getLatitude()), String.valueOf(mLastLocation.getLongitude())) + getString(R.string.words_missed_address_suffix));
+            mLastLocation = String.format("%1$f,%2%f", loc.getLatitude(), loc.getLongitude());
 
-            Toast.makeText(getActivity(), getString(R.string.words_missed_address_prefix) + String.format("%1$s,%2$s", String.valueOf(mLastLocation.getLatitude()), String.valueOf(mLastLocation.getLongitude())) + getString(R.string.words_missed_address_suffix), Toast.LENGTH_SHORT).show();
+            Log.i(TAG, getString(R.string.words_missed_address_prefix));
+
+            Toast.makeText(getActivity(), getString(R.string.words_missed_address_prefix) + mLastLocation  + getString(R.string.words_missed_address_suffix), Toast.LENGTH_SHORT).show();
 
             ReverseGeocodingTask task = new ReverseGeocodingTask();
-            task.execute(loc);
+            task.execute(mLastLocation);
 
             processLocation();
         }
@@ -99,7 +100,7 @@ public class LocationDiagnosisFragment extends Fragment {
                     appendTextAndScroll("Start location request service");
 
                     if (!Utils.CheckChineseLanguage()){
-                        mLocationMaster.startLocationUpdates();
+                        mLocationMaster.startLocationUpdates(mLocationListener);
                     }
 
                     mDiagnoseButton.setText("Stop");
@@ -117,7 +118,7 @@ public class LocationDiagnosisFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 GetAdjustedCoordinateTask task = new GetAdjustedCoordinateTask();
-                task.execute(String.format("%1$s,%2$s", String.valueOf(mLastLocation.getLatitude()), String.valueOf(mLastLocation.getLongitude())));
+                task.execute(mLastLocation);
             }
         });
 
@@ -127,7 +128,7 @@ public class LocationDiagnosisFragment extends Fragment {
         setupActionBar();
 
         appendTextAndScroll("Getting hisotry location");
-        mLastLocation = mLocationMaster.getKeptLocation();
+        mLastLocation = mLocationMaster.getLastCoordinate();
         mPlaceEditText.setText(mLocationMaster.getAddress());
 
         if (mLastLocation != null && (mLocationMaster.getAddress() == null || mLocationMaster.getAddress().isEmpty())) {
@@ -200,30 +201,30 @@ public class LocationDiagnosisFragment extends Fragment {
 
             appendTextAndScroll("Not got a location");
         } else {
-            mCoordinateEditText.setText("" + mLastLocation.getLatitude() + ", " + mLastLocation.getLongitude());
+            mCoordinateEditText.setText(mLastLocation);
 
             mResultEditText.setText("Location Acquired");
 
-            mLocationMaster.setKeptLocation(mLastLocation);
+            mLocationMaster.setLastCoordinate(mLastLocation);
 
             appendTextAndScroll("Got a location");
         }
     }
 
-    private class ReverseGeocodingTask extends AsyncTask<Location, Void, String> {
+    private class ReverseGeocodingTask extends AsyncTask<String, Void, String> {
         @Override
-        protected String doInBackground(Location... params) {
+        protected String doInBackground(String... params) {
             Log.i(TAG, "ReverseGeocodingTask doInBackground");
 
             return performReverseGeocodingTask(params[0]);
         }
 
-        private String performReverseGeocodingTask(Location location) {
+        private String performReverseGeocodingTask(String location) {
             GeocodingResult[] results;
 
             GeoApiContext contextG = new GeoApiContext().setApiKey("AIzaSyAp2aNol3FhJypghIA2IUZIOkNTwo6YPbY");
             try {
-                results = GeocodingApi.geocode(contextG, String.format("%1$f,%2$f", location.getLatitude(), location.getLongitude())).await();
+                results = GeocodingApi.geocode(contextG, location).await();
 
                 Log.d(TAG, results[0].formattedAddress);
             } catch (Exception e) {

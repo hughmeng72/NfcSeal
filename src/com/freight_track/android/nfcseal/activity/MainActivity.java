@@ -18,7 +18,6 @@ import android.widget.Toast;
 import com.freight_track.android.nfcseal.fragment.LoginFragment;
 import com.freight_track.android.nfcseal.fragment.MainFragment;
 import com.freight_track.android.nfcseal.R;
-import com.freight_track.android.nfcseal.common.Utils;
 import com.freight_track.android.nfcseal.common.LocationMaster;
 import com.freight_track.android.nfcseal.common.LocationReceiver;
 import com.google.maps.GeoApiContext;
@@ -33,23 +32,14 @@ public class MainActivity extends SingleFragmentActivity implements
 
     private LocationMaster mLocationMaster;
     private BroadcastReceiver mLocationReceiver = new LocationReceiver() {
-
         @Override
         protected void onLocationReceived(Context context, Location loc) {
             Log.d(TAG, loc.toString());
 
-            mLocationMaster.setKeptLocation(loc);
+            mLocationMaster.setLastCoordinate(String.format("%1$f,%2$f", loc.getLatitude(), loc.getLongitude()));
 
-            if (Utils.getCurrentLanguage().equals("en-US")) {
-                ReverseGeocodingTask task = new ReverseGeocodingTask();
-                task.execute(loc);
-            }
-
-            //			// Stop location update once got a location with specified accuracy.
-//			if (loc.getAccuracy() <= 50.0f) {
-//				Log.i(TAG, TAG + "Got enough accuracy location.");
-//				mLocationMaster.stopLocationUpdates();
-//			}
+            ReverseGeocodingTask task = new ReverseGeocodingTask();
+            task.execute(loc);
         }
     };
 
@@ -58,7 +48,7 @@ public class MainActivity extends SingleFragmentActivity implements
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
         mLocationMaster = LocationMaster.get(this);
-        mLocationMaster.startLocationUpdates();
+        mLocationMaster.startLocationUpdates(mLocationListener);
 
         super.onCreate(savedInstanceState);
     }
