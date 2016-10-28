@@ -1,4 +1,4 @@
-package com.freight_track.android.nfcseal;
+package com.freight_track.android.nfcseal.common;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

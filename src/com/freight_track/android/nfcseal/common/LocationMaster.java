@@ -1,4 +1,4 @@
-package com.freight_track.android.nfcseal;
+package com.freight_track.android.nfcseal.common;
 
 import android.app.PendingIntent;
 import android.content.Context;

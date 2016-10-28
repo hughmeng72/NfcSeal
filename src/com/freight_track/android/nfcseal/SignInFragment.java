@@ -34,6 +34,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.freight_track.android.nfcseal.common.LocationMaster;
+import com.freight_track.android.nfcseal.common.LocationReceiver;
 import com.google.gson.Gson;
 import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;

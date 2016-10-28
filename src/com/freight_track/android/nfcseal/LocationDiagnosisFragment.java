@@ -13,7 +13,6 @@ import android.app.ActionBar;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -33,6 +32,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.freight_track.android.nfcseal.common.LocationMaster;
+import com.freight_track.android.nfcseal.common.LocationReceiver;
 import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
 import com.google.maps.model.GeocodingResult;
@@ -110,7 +111,6 @@ public class LocationDiagnosisFragment extends Fragment {
 
         mShowMapButton = (Button) v.findViewById(R.id.showMapButton);
         mShowMapButton.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 GetAdjustedCoordinateTask task = new GetAdjustedCoordinateTask();
@@ -317,11 +317,11 @@ public class LocationDiagnosisFragment extends Fragment {
                     return;
                 }
 
-                Intent i = new Intent(getActivity(), MapOptionActivity.class);
-                i.putExtra(MapOptionActivity.EXTRA_LOCATION_LAT, Double.parseDouble(latLng[0]));
-                i.putExtra(MapOptionActivity.EXTRA_LOCATION_LNG, Double.parseDouble(latLng[1]));
+//                Intent i = new Intent(getActivity(), MapOptionActivity.class);
+//                i.putExtra(MapOptionActivity.EXTRA_LOCATION_LAT, Double.parseDouble(latLng[0]));
+//                i.putExtra(MapOptionActivity.EXTRA_LOCATION_LNG, Double.parseDouble(latLng[1]));
 
-                startActivity(i);
+//                startActivity(i);
             } else {
                 Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_SHORT).show();
             }

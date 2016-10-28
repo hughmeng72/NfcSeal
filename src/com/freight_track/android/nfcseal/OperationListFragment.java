@@ -392,82 +392,82 @@ public class OperationListFragment extends ListFragment {
 		}
 	}
 
-	private class GetAdjustedCoordinateTask extends AsyncTask<String, Void, String> {
-
-		@Override
-		protected String doInBackground(String... params) {
-			Log.i(TAG, "GetAdjustedCoordinateTask doInBackground");
-
-			return performGetAdjustedCoordinateTask(params[0]);
-		}
-
-		private String performGetAdjustedCoordinateTask(String coordinate) {
-
-			SoapObject request = new SoapObject(Utils.getWsNamespace(), Utils.getWsMethodOfGetAdjustedCoordinate());
-
-			request.addProperty(Utils.newPropertyInstance("coordinate", coordinate, String.class));
-
-			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-			envelope.dotNet = true;
-			envelope.setOutputSoapObject(request);
-
-			HttpTransportSE transport = new HttpTransportSE(Utils.getWsUrl());
-
-			String responseJSON = null;
-
-			try {
-				transport.call(Utils.getWsSoapAction() + Utils.getWsMethodOfGetAdjustedCoordinate(), envelope);
-
-				SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
-
-				responseJSON = response.toString();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-			return responseJSON;
-		}
-
-		@Override
-		protected void onPostExecute(String result) {
-			Log.i(TAG, "GetAdjustedCoordinateTask onPostExecute Result: " + result);
-
-			if (result != null) {
-				String[] latLng = result.split(",");
-				
-				if (latLng.length != 2) {
-					Toast.makeText(getActivity(), "Coordinate Parsing Error: lat/lng missed match.", Toast.LENGTH_LONG).show();
-					return;
-				}
-				
-				if (!Utils.isDouble(latLng[0])) {
-					Toast.makeText(getActivity(), "Coordinate Parsing Error: Latitude type mismatched.", Toast.LENGTH_LONG).show();
-					return;
-				}
-
-				if (!Utils.isDouble(latLng[1])) {
-					Toast.makeText(getActivity(), "Coordinate Parsing Error: Longitude type mismatched.", Toast.LENGTH_LONG).show();
-					return;
-				}
-				
-				Intent i = new Intent(getActivity(), MapOptionActivity.class);
-				i.putExtra(MapOptionActivity.EXTRA_LOCATION_LAT, Double.parseDouble(latLng[0]));
-				i.putExtra(MapOptionActivity.EXTRA_LOCATION_LNG, Double.parseDouble(latLng[1]));
-				startActivity(i);
-			} else {
-				Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_SHORT).show();
-			}
-		}
-
-		@Override
-		protected void onPreExecute() {
-			Log.i(TAG, "GetAdjustedCoordinateTask onPreExecute");
-		}
-
-		@Override
-		protected void onProgressUpdate(Void... values) {
-			Log.i(TAG, "GetAdjustedCoordinateTask onProgressUpdate");
-		}
-	}
+//	private class GetAdjustedCoordinateTask extends AsyncTask<String, Void, String> {
+//
+//		@Override
+//		protected String doInBackground(String... params) {
+//			Log.i(TAG, "GetAdjustedCoordinateTask doInBackground");
+//
+//			return performGetAdjustedCoordinateTask(params[0]);
+//		}
+//
+//		private String performGetAdjustedCoordinateTask(String coordinate) {
+//
+//			SoapObject request = new SoapObject(Utils.getWsNamespace(), Utils.getWsMethodOfGetAdjustedCoordinate());
+//
+//			request.addProperty(Utils.newPropertyInstance("coordinate", coordinate, String.class));
+//
+//			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+//			envelope.dotNet = true;
+//			envelope.setOutputSoapObject(request);
+//
+//			HttpTransportSE transport = new HttpTransportSE(Utils.getWsUrl());
+//
+//			String responseJSON = null;
+//
+//			try {
+//				transport.call(Utils.getWsSoapAction() + Utils.getWsMethodOfGetAdjustedCoordinate(), envelope);
+//
+//				SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
+//
+//				responseJSON = response.toString();
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//
+//			return responseJSON;
+//		}
+//
+//		@Override
+//		protected void onPostExecute(String result) {
+//			Log.i(TAG, "GetAdjustedCoordinateTask onPostExecute Result: " + result);
+//
+//			if (result != null) {
+//				String[] latLng = result.split(",");
+//
+//				if (latLng.length != 2) {
+//					Toast.makeText(getActivity(), "Coordinate Parsing Error: lat/lng missed match.", Toast.LENGTH_LONG).show();
+//					return;
+//				}
+//
+//				if (!Utils.isDouble(latLng[0])) {
+//					Toast.makeText(getActivity(), "Coordinate Parsing Error: Latitude type mismatched.", Toast.LENGTH_LONG).show();
+//					return;
+//				}
+//
+//				if (!Utils.isDouble(latLng[1])) {
+//					Toast.makeText(getActivity(), "Coordinate Parsing Error: Longitude type mismatched.", Toast.LENGTH_LONG).show();
+//					return;
+//				}
+//
+//				Intent i = new Intent(getActivity(), MapOptionActivity.class);
+//				i.putExtra(MapOptionActivity.EXTRA_LOCATION_LAT, Double.parseDouble(latLng[0]));
+//				i.putExtra(MapOptionActivity.EXTRA_LOCATION_LNG, Double.parseDouble(latLng[1]));
+//				startActivity(i);
+//			} else {
+//				Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_SHORT).show();
+//			}
+//		}
+//
+//		@Override
+//		protected void onPreExecute() {
+//			Log.i(TAG, "GetAdjustedCoordinateTask onPreExecute");
+//		}
+//
+//		@Override
+//		protected void onProgressUpdate(Void... values) {
+//			Log.i(TAG, "GetAdjustedCoordinateTask onProgressUpdate");
+//		}
+//	}
 
 }
