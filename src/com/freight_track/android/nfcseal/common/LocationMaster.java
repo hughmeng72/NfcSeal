@@ -47,6 +47,9 @@ public class LocationMaster {
         mLocationManager = (LocationManager) mAppContext.getSystemService(Context.LOCATION_SERVICE);
 
         LocationClientOption option = new LocationClientOption();
+        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
+        option.setScanSpan(60 * 1000);
+        option.setOpenGps(true);
         option.setIsNeedAddress(true);
         mLocationClient = new LocationClient(mAppContext);
         mLocationClient.setLocOption(option);
@@ -67,9 +70,13 @@ public class LocationMaster {
     }
 
     public void startLocationUpdates(BDLocationListener bdLocationListener) {
-        String provider = LocationManager.GPS_PROVIDER;
 
-//        if (!Utils.CheckChineseLanguage()) {
+        if (Utils.CheckChineseLanguage()) {
+            mLocationClient.registerLocationListener(bdLocationListener);
+            mLocationClient.start();
+        }
+        else {
+            String provider = LocationManager.GPS_PROVIDER;
 
             // get the last known location and broadcast it if we have one
             Location lastKnown = mLocationManager.getLastKnownLocation(provider);
@@ -92,20 +99,20 @@ public class LocationMaster {
                 setLastCoordinate(String.format("%1$f,%2$f", lastKnown.getLatitude(), lastKnown.getLongitude()));
                 broadcastLocation(lastKnown);
             }
-//        }
 
-        // start updates from the location manager
-        PendingIntent pi = getLocationPendingIntent(true);
-        mLocationManager.requestLocationUpdates(provider, 60000, 0, pi);
-
-//        mLocationClient.registerLocationListener(bdLocationListener);
-//        mLocationClient.start();
+            // start updates from the location manager
+            PendingIntent pi = getLocationPendingIntent(true);
+            mLocationManager.requestLocationUpdates(provider, 60000, 0, pi);
+        }
     }
 
-    public void stopLocationUpdates() {
-//        if (mLocationClient != null) {
-//            mLocationClient.stop();
-//        }
+    public void stopLocationUpdates(BDLocationListener bdLocationListener) {
+        if (mLocationClient != null) {
+            if (bdLocationListener != null) {
+                mLocationClient.unRegisterLocationListener(bdLocationListener);
+            }
+            mLocationClient.stop();
+        }
 
         PendingIntent pi = getLocationPendingIntent(false);
         if (pi != null) {

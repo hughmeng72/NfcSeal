@@ -289,7 +289,7 @@ public class LockFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
 
-        mLocationMaster.stopLocationUpdates();
+//        mLocationMaster.stopLocationUpdates(bdLocationListener);
     }
 
     @Override

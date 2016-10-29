@@ -155,7 +155,7 @@ public class SignInFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
 
-        mLocationMaster.stopLocationUpdates();
+//        mLocationMaster.stopLocationUpdates(bdLocationListener);
     }
 
     public void gotTag(byte[] bs, Tag tag) {

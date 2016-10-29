@@ -34,6 +34,7 @@ import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
 import com.freight_track.android.nfcseal.R;
+import com.freight_track.android.nfcseal.activity.LocationDiagnosisActivity;
 import com.freight_track.android.nfcseal.common.NotiftLocationListener;
 import com.freight_track.android.nfcseal.common.Utils;
 import com.freight_track.android.nfcseal.common.LocationMaster;
@@ -60,12 +61,11 @@ public class LocationDiagnosisFragment extends Fragment {
     private BroadcastReceiver mLocationReceiver = new LocationReceiver() {
         @Override
         protected void onLocationReceived(Context context, Location loc) {
-            mLastLocation = String.format("%1$f,%2%f", loc.getLatitude(), loc.getLongitude());
+            mLastLocation = String.format("%1$f,%2$f", loc.getLatitude(), loc.getLongitude());
 
             Log.d(TAG, mLastLocation);
-            Log.i(TAG, getString(R.string.words_missed_address_prefix));
 
-            Toast.makeText(getActivity(), getString(R.string.words_missed_address_prefix) + mLastLocation  + getString(R.string.words_missed_address_suffix), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), getString(R.string.words_missed_address_prefix) + mLastLocation  + getString(R.string.words_missed_address_suffix), Toast.LENGTH_SHORT).show();
 
             ReverseGeocodingTask task = new ReverseGeocodingTask();
             task.execute(mLastLocation);
@@ -78,6 +78,12 @@ public class LocationDiagnosisFragment extends Fragment {
         @Override
         public void onReceiveLocation(BDLocation loc) {
             super.onReceiveLocation(loc);
+
+            if (loc.getLatitude() == 0 || loc.getLongitude() == 0) {
+                Log.d(TAG, String.format("Got an illegal address: %1$f,%2$f", loc.getLatitude(), loc.getLongitude()));
+
+                return;
+            }
 
             mLastLocation = String.format("%1$f,%2$f", loc.getLatitude(), loc.getLongitude());
 
@@ -120,7 +126,7 @@ public class LocationDiagnosisFragment extends Fragment {
                     appendTextAndScroll("Start location request service");
                     mDiagnoseButton.setText("Stop");
                 } else {
-                    mLocationMaster.stopLocationUpdates();
+                    mLocationMaster.stopLocationUpdates(mBDLocationListener);
 
                     appendTextAndScroll("Stop location request service");
                     mDiagnoseButton.setText("Start");
@@ -133,8 +139,6 @@ public class LocationDiagnosisFragment extends Fragment {
         mShowMapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                GetAdjustedCoordinateTask task = new GetAdjustedCoordinateTask();
-                task.execute(mLastLocation);
             }
         });
 
@@ -169,7 +173,7 @@ public class LocationDiagnosisFragment extends Fragment {
         super.onStop();
 
         getActivity().unregisterReceiver(mLocationReceiver);
-        mLocationMaster.stopLocationUpdates();
+        mLocationMaster.stopLocationUpdates(mBDLocationListener);
     }
 
     @Override
@@ -258,8 +262,10 @@ public class LocationDiagnosisFragment extends Fragment {
 
             try {
                 if (result != null) {
-                    mLocationMaster.setAddress(result);
-                    mPlaceEditText.setText(result);
+                    if (getActivity() != null && getActivity() instanceof LocationDiagnosisActivity) {
+                        mLocationMaster.setAddress(result);
+                        mPlaceEditText.setText(result);
+                    }
                 } else {
                     Toast.makeText(getActivity().getApplicationContext(), R.string.prompt_system_error, Toast.LENGTH_SHORT).show();
                 }
@@ -276,85 +282,6 @@ public class LocationDiagnosisFragment extends Fragment {
         @Override
         protected void onProgressUpdate(Void... values) {
             Log.i(TAG, "ReverseGeocodingTask onProgressUpdate");
-        }
-    }
-
-    private class GetAdjustedCoordinateTask extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... params) {
-            Log.i(TAG, "GetAdjustedCoordinateTask doInBackground");
-
-            return performGetAdjustedCoordinateTask(params[0]);
-        }
-
-        private String performGetAdjustedCoordinateTask(String coordinate) {
-
-            SoapObject request = new SoapObject(Utils.getWsNamespace(), Utils.getWsMethodOfGetAdjustedCoordinate());
-
-            request.addProperty(Utils.newPropertyInstance("coordinate", coordinate, String.class));
-
-            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-            envelope.dotNet = true;
-            envelope.setOutputSoapObject(request);
-
-            HttpTransportSE transport = new HttpTransportSE(Utils.getWsUrl());
-
-            String responseJSON = null;
-
-            try {
-                transport.call(Utils.getWsSoapAction() + Utils.getWsMethodOfGetAdjustedCoordinate(), envelope);
-
-                SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
-
-                responseJSON = response.toString();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return responseJSON;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            Log.i(TAG, "GetAdjustedCoordinateTask onPostExecute Result: " + result);
-
-            if (result != null) {
-                String[] latLng = result.split(",");
-
-                if (latLng.length != 2) {
-                    Toast.makeText(getActivity(), "Coordinate Parsing Error: lat/lng missed match.", Toast.LENGTH_LONG).show();
-                    return;
-                }
-
-                if (!Utils.isDouble(latLng[0])) {
-                    Toast.makeText(getActivity(), "Coordinate Parsing Error: Latitude type mismatched.", Toast.LENGTH_LONG).show();
-                    return;
-                }
-
-                if (!Utils.isDouble(latLng[1])) {
-                    Toast.makeText(getActivity(), "Coordinate Parsing Error: Longitude type mismatched.", Toast.LENGTH_LONG).show();
-                    return;
-                }
-
-//                Intent i = new Intent(getActivity(), MapOptionActivity.class);
-//                i.putExtra(MapOptionActivity.EXTRA_LOCATION_LAT, Double.parseDouble(latLng[0]));
-//                i.putExtra(MapOptionActivity.EXTRA_LOCATION_LNG, Double.parseDouble(latLng[1]));
-
-//                startActivity(i);
-            } else {
-                Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        @Override
-        protected void onPreExecute() {
-            Log.i(TAG, "GetAdjustedCoordinateTask onPreExecute");
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            Log.i(TAG, "GetAdjustedCoordinateTask onProgressUpdate");
         }
     }
 

@@ -307,7 +307,7 @@ public class UnlockFragment extends Fragment {
         super.onDestroy();
 
         mThumbnailThread.quit();
-        mLocationMaster.stopLocationUpdates();
+//        mLocationMaster.stopLocationUpdates(bdLocationListener);
     }
 
     @Override

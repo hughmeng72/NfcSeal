@@ -30,25 +30,10 @@ public class MainActivity extends SingleFragmentActivity implements
     private static final String TAG = "MainActivity";
     private static final int LOCK = 0;
 
-    private LocationMaster mLocationMaster;
-    private BroadcastReceiver mLocationReceiver = new LocationReceiver() {
-        @Override
-        protected void onLocationReceived(Context context, Location loc) {
-            Log.d(TAG, loc.toString());
-
-            mLocationMaster.setLastCoordinate(String.format("%1$f,%2$f", loc.getLatitude(), loc.getLongitude()));
-
-            ReverseGeocodingTask task = new ReverseGeocodingTask();
-            task.execute(loc);
-        }
-    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-
-        mLocationMaster = LocationMaster.get(this);
-//        mLocationMaster.startLocationUpdates(mBDLocationListener);
 
         super.onCreate(savedInstanceState);
     }
@@ -135,108 +120,6 @@ public class MainActivity extends SingleFragmentActivity implements
             Toast.makeText(getBaseContext(), R.string.prompt_exit_alert, Toast.LENGTH_SHORT).show();
 
             backPressed = System.currentTimeMillis();
-        }
-
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        registerReceiver(mLocationReceiver, new IntentFilter(LocationMaster.ACTION_LOCATION));
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        unregisterReceiver(mLocationReceiver);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        mLocationMaster.stopLocationUpdates();
-    }
-
-    private class ReverseGeocodingTask extends AsyncTask<Location, Void, String> {
-
-        @Override
-        protected String doInBackground(Location... params) {
-            Log.i(TAG, "ReverseGeocodingTask doInBackground");
-
-            return performReverseGeocodingTask(params[0]);
-        }
-
-//		private String performReverseGeocodingTask(Location location) {
-//
-//			SoapObject request = new SoapObject(Utils.getWsNamespace2(), Utils.getWsMethodOfGetGooglePosition());
-//
-//			request.addProperty(Utils.newPropertyInstance("googleCoordinate", String.format("%1$s,%2$s", String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude())), String.class));
-//			request.addProperty(Utils.newPropertyInstance("language", Utils.getCurrentLanguage(), String.class));
-//
-//			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-//			envelope.dotNet = true;
-//			envelope.setOutputSoapObject(request);
-//
-//			HttpTransportSE transport = new HttpTransportSE(Utils.getWsUrl2());
-//
-//			String responseJSON = null;
-//
-//			try {
-//				transport.call(Utils.getWsSoapAction2() + Utils.getWsMethodOfGetGooglePosition(), envelope);
-//
-//				SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
-//
-//				responseJSON = response.toString();
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//
-//			return responseJSON;
-//		}
-
-        private String performReverseGeocodingTask(Location location) {
-            GeocodingResult[] results;
-
-            GeoApiContext contextG = new GeoApiContext().setApiKey("AIzaSyAp2aNol3FhJypghIA2IUZIOkNTwo6YPbY");
-            try {
-                results = GeocodingApi.geocode(contextG, String.format("%1$f,%2$f", location.getLatitude(), location.getLongitude())).await();
-
-                Log.d(TAG, results[0].formattedAddress);
-            } catch (Exception e) {
-                e.printStackTrace();
-
-                return null;
-            }
-
-            return results[0].formattedAddress;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            Log.i(TAG, "ReverseGeocodingTask onPostExecute Result: " + result);
-
-            try {
-                if (result != null) {
-                    mLocationMaster.setAddress(result);
-                } else {
-                    Toast.makeText(getApplicationContext(), R.string.prompt_system_error, Toast.LENGTH_SHORT).show();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        protected void onPreExecute() {
-            Log.i(TAG, "ReverseGeocodingTask onPreExecute");
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            Log.i(TAG, "ReverseGeocodingTask onProgressUpdate");
         }
     }
 }
