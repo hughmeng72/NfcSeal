@@ -107,7 +107,8 @@ public class LockFragment extends Fragment {
         mLastLocation = mLocationMaster.getLastCoordinate();
         mLastAddress = mLocationMaster.getAddress();
 
-        mLocationMaster.startLocationUpdates(mLocationListener);
+//        mLocationMaster.startLocationUpdates(mLocationListener);
+        mLocationMaster.startLocationUpdates(null);
 
         Log.d(TAG, User.get().getTOKEN());
     }

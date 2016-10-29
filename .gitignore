@@ -3,4 +3,5 @@
 /proguard-project.txt
 /lint.xml
 /build/
-/.gradle/2.14.1/
+/.gradle
+/.idea/

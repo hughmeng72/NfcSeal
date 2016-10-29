@@ -82,7 +82,7 @@ public class SignInFragment extends Fragment {
         mLastLocation = mLocationMaster.getLastCoordinate();
         mLastAddress = mLocationMaster.getAddress();
 
-        mLocationMaster.startLocationUpdates(mLocationListener);
+//        mLocationMaster.startLocationUpdates(mLocationListener);
 
         Log.d(TAG, User.get().getTOKEN());
     }

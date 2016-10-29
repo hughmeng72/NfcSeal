@@ -48,7 +48,7 @@ public class MainActivity extends SingleFragmentActivity implements
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
         mLocationMaster = LocationMaster.get(this);
-        mLocationMaster.startLocationUpdates(mLocationListener);
+//        mLocationMaster.startLocationUpdates(mBDLocationListener);
 
         super.onCreate(savedInstanceState);
     }

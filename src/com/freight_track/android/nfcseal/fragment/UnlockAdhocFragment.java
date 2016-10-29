@@ -115,7 +115,7 @@ public class UnlockAdhocFragment extends Fragment {
         mLastLocation = mLocationMaster.getLastCoordinate();
         mLastAddress = mLocationMaster.getAddress();
 
-        mLocationMaster.startLocationUpdates(mLocationListener);
+//        mLocationMaster.startLocationUpdates(mLocationListener);
 
         mThumbnailThread = new ThumbnailDownloader<ImageView>(new Handler());
         mThumbnailThread.setListener(new ThumbnailDownloader.Listener<ImageView>() {

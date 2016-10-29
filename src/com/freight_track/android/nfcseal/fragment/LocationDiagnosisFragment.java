@@ -32,7 +32,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baidu.location.BDLocation;
 import com.freight_track.android.nfcseal.R;
+import com.freight_track.android.nfcseal.common.NotiftLocationListener;
 import com.freight_track.android.nfcseal.common.Utils;
 import com.freight_track.android.nfcseal.common.LocationMaster;
 import com.freight_track.android.nfcseal.common.LocationReceiver;
@@ -54,19 +56,35 @@ public class LocationDiagnosisFragment extends Fragment {
 
     private String mLastLocation;
     private LocationMaster mLocationMaster;
-    private BroadcastReceiver mLocationReceiver = new LocationReceiver() {
 
+    private BroadcastReceiver mLocationReceiver = new LocationReceiver() {
         @Override
         protected void onLocationReceived(Context context, Location loc) {
-            Log.d(TAG, loc.toString());
             mLastLocation = String.format("%1$f,%2%f", loc.getLatitude(), loc.getLongitude());
 
+            Log.d(TAG, mLastLocation);
             Log.i(TAG, getString(R.string.words_missed_address_prefix));
 
             Toast.makeText(getActivity(), getString(R.string.words_missed_address_prefix) + mLastLocation  + getString(R.string.words_missed_address_suffix), Toast.LENGTH_SHORT).show();
 
             ReverseGeocodingTask task = new ReverseGeocodingTask();
             task.execute(mLastLocation);
+
+            processLocation();
+        }
+    };
+
+    private NotiftLocationListener mBDLocationListener = new NotiftLocationListener() {
+        @Override
+        public void onReceiveLocation(BDLocation loc) {
+            super.onReceiveLocation(loc);
+
+            mLastLocation = String.format("%1$f,%2$f", loc.getLatitude(), loc.getLongitude());
+
+            mLocationMaster.setAddress(loc.getAddress().address);
+            mPlaceEditText.setText(loc.getAddress().address);
+
+            Log.d(TAG, mLastLocation);
 
             processLocation();
         }
@@ -97,16 +115,14 @@ public class LocationDiagnosisFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (mDiagnoseButton.getText().equals("Start")) {
+                    mLocationMaster.startLocationUpdates(mBDLocationListener);
+
                     appendTextAndScroll("Start location request service");
-
-                    if (!Utils.CheckChineseLanguage()){
-                        mLocationMaster.startLocationUpdates(mLocationListener);
-                    }
-
                     mDiagnoseButton.setText("Stop");
                 } else {
-                    appendTextAndScroll("Stop location request service");
                     mLocationMaster.stopLocationUpdates();
+
+                    appendTextAndScroll("Stop location request service");
                     mDiagnoseButton.setText("Start");
                 }
             }
@@ -131,7 +147,7 @@ public class LocationDiagnosisFragment extends Fragment {
         mLastLocation = mLocationMaster.getLastCoordinate();
         mPlaceEditText.setText(mLocationMaster.getAddress());
 
-        if (mLastLocation != null && (mLocationMaster.getAddress() == null || mLocationMaster.getAddress().isEmpty())) {
+        if (!Utils.CheckChineseLanguage() && mLastLocation != null && (mLocationMaster.getAddress() == null || mLocationMaster.getAddress().isEmpty())) {
             ReverseGeocodingTask task = new ReverseGeocodingTask();
             task.execute(mLastLocation);
         }
@@ -153,13 +169,12 @@ public class LocationDiagnosisFragment extends Fragment {
         super.onStop();
 
         getActivity().unregisterReceiver(mLocationReceiver);
+        mLocationMaster.stopLocationUpdates();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-
-        mLocationMaster.stopLocationUpdates();
     }
 
     private void appendTextAndScroll(String text) {
@@ -193,6 +208,7 @@ public class LocationDiagnosisFragment extends Fragment {
     }
 
     private void processLocation() {
+
         if (mLastLocation == null) {
             mCoordinateEditText.setText("N/A");
             mPlaceEditText.setText("N/A");
