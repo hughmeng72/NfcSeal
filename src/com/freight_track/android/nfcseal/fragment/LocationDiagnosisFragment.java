@@ -63,9 +63,7 @@ public class LocationDiagnosisFragment extends Fragment {
         protected void onLocationReceived(Context context, Location loc) {
             mLastLocation = String.format("%1$f,%2$f", loc.getLatitude(), loc.getLongitude());
 
-            Log.d(TAG, mLastLocation);
-
-            Toast.makeText(getActivity().getApplicationContext(), getString(R.string.words_missed_address_prefix) + mLastLocation  + getString(R.string.words_missed_address_suffix), Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "Got location from GPS: " + mLastLocation);
 
             ReverseGeocodingTask task = new ReverseGeocodingTask();
             task.execute(mLastLocation);
@@ -90,7 +88,7 @@ public class LocationDiagnosisFragment extends Fragment {
             mLocationMaster.setAddress(loc.getAddress().address);
             mPlaceEditText.setText(loc.getAddress().address);
 
-            Log.d(TAG, mLastLocation);
+            Log.d(TAG, "Got location from Baidu: " + mLastLocation);
 
             processLocation();
         }

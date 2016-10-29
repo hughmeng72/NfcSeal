@@ -50,6 +50,9 @@ import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baidu.location.BDLocation;
+import com.freight_track.android.nfcseal.activity.UnlockActivity;
+import com.freight_track.android.nfcseal.common.NotiftLocationListener;
 import com.freight_track.android.nfcseal.common.PictureUtils;
 import com.freight_track.android.nfcseal.R;
 import com.freight_track.android.nfcseal.model.Seal;
@@ -74,22 +77,34 @@ public class UnlockFragment extends Fragment {
     private Seal mSeal;
     ThumbnailDownloader<ImageView> mThumbnailThread;
 
+    private LocationMaster mLocationMaster;
     private String mLastLocation;
     private String mLastAddress;
 
-    private LocationMaster mLocationMaster;
     private BroadcastReceiver mLocationReceiver = new LocationReceiver() {
         @Override
         protected void onLocationReceived(Context context, Location loc) {
-            Log.d(TAG, loc.toString());
-
-            mLastLocation = String.format("%1$f,%2%f", loc.getLatitude(), loc.getLongitude());
+            mLastLocation = String.format("%1$f,%2$f", loc.getLatitude(), loc.getLongitude());
             mLocationMaster.setLastCoordinate(mLastLocation);
 
-            if (Utils.getCurrentLanguage().equals("en-US")) {
-                ReverseGeocodingTask task = new ReverseGeocodingTask();
-                task.execute(loc);
-            }
+            Log.d(TAG, "Got location from GPS: " + mLastLocation);
+
+            ReverseGeocodingTask task = new ReverseGeocodingTask();
+            task.execute(mLastLocation);
+        }
+    };
+
+    private NotiftLocationListener mBDLocationListener = new NotiftLocationListener() {
+        @Override
+        public void onReceiveLocation(BDLocation loc) {
+            super.onReceiveLocation(loc);
+
+            mLastLocation = String.format("%1$f,%2$f", loc.getLatitude(), loc.getLongitude());
+
+            Log.d(TAG, "Got location from Baidu: " + mLastLocation);
+
+            mLocationMaster.setLastCoordinate(mLastLocation);
+            mLocationMaster.setAddress(loc.getAddress().address);
         }
     };
 
@@ -134,8 +149,6 @@ public class UnlockFragment extends Fragment {
         mLocationMaster = LocationMaster.get(getActivity());
         mLastLocation = mLocationMaster.getLastCoordinate();
         mLastAddress = mLocationMaster.getAddress();
-
-//        mLocationMaster.startLocationUpdates(mLocationListener);
 
         mThumbnailThread = new ThumbnailDownloader<ImageView>(new Handler());
         mThumbnailThread.setListener(new ThumbnailDownloader.Listener<ImageView>() {
@@ -265,8 +278,7 @@ public class UnlockFragment extends Fragment {
         Log.d(TAG, "onStart");
 
         getActivity().registerReceiver(mLocationReceiver, new IntentFilter(LocationMaster.ACTION_LOCATION));
-
-        // showPhotos();
+        mLocationMaster.startLocationUpdates(mBDLocationListener);
     }
 
     @Override
@@ -298,6 +310,7 @@ public class UnlockFragment extends Fragment {
         super.onStop();
 
         getActivity().unregisterReceiver(mLocationReceiver);
+        mLocationMaster.stopLocationUpdates(mBDLocationListener);
 
         PictureUtils.cleanImageView(mTakePictureImageButton);
     }
@@ -502,6 +515,10 @@ public class UnlockFragment extends Fragment {
         protected void onPostExecute(String result) {
             Log.i(TAG, "CheckTask onPostExecute");
 
+            if (getActivity() == null || !(getActivity() instanceof UnlockActivity)) {
+                return;
+            }
+
             getActivity().setProgressBarIndeterminateVisibility(false);
 
             try {
@@ -512,10 +529,10 @@ public class UnlockFragment extends Fragment {
 
                     ValidateSeal();
                 } else {
-                    Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity().getApplicationContext(), R.string.prompt_system_error, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(), R.string.prompt_system_error, Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
         }
@@ -531,13 +548,13 @@ public class UnlockFragment extends Fragment {
                 } else {
                     mSeal.setTagId(null);
 
-                    Toast toast = Toast.makeText(getActivity(), mSeal.getStateWarningDescription(mSeal.getState()),
+                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), mSeal.getStateWarningDescription(mSeal.getState()),
                             Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.CENTER, 0, 0);
                     toast.show();
                 }
             } else {
-                Toast.makeText(getActivity(), R.string.prompt_internet_connection_broken, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(), R.string.prompt_internet_connection_broken, Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -591,6 +608,10 @@ public class UnlockFragment extends Fragment {
         protected void onPostExecute(String result) {
             Log.i(TAG, "GotOperationTask onPostExecute");
 
+            if (getActivity() == null || !(getActivity() instanceof UnlockActivity)) {
+                return;
+            }
+
             getActivity().setProgressBarIndeterminateVisibility(false);
 
             try {
@@ -603,15 +624,15 @@ public class UnlockFragment extends Fragment {
                     } else {
                         mSeal.setTagId(null);
 
-                        Toast toast = Toast.makeText(getActivity(), R.string.prompt_tag_not_read_lock_info, Toast.LENGTH_LONG);
+                        Toast toast = Toast.makeText(getActivity().getApplicationContext(), R.string.prompt_tag_not_read_lock_info, Toast.LENGTH_LONG);
                         toast.setGravity(Gravity.CENTER, 0, 0);
                         toast.show();
                     }
                 } else {
-                    Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity().getApplicationContext(), R.string.prompt_system_error, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(), R.string.prompt_system_error, Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
         }
@@ -759,7 +780,10 @@ public class UnlockFragment extends Fragment {
         @Override
         protected void onPostExecute(String result) {
             Log.i(TAG, "UnlockTask onPostExecute");
-            // Log.i(TAG, result);
+
+            if (getActivity() == null || !(getActivity() instanceof UnlockActivity)) {
+                return;
+            }
 
             getActivity().setProgressBarIndeterminateVisibility(false);
 
@@ -768,19 +792,19 @@ public class UnlockFragment extends Fragment {
                     WsResult ret = new Gson().fromJson(result, WsResult.class);
 
                     if (ret.isOK()) {
-                        Toast.makeText(getActivity(), R.string.prompt_unlock_success, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity().getApplicationContext(), R.string.prompt_unlock_success, Toast.LENGTH_SHORT).show();
 
                         getActivity().finish();
                     } else {
-                        Toast toast = Toast.makeText(getActivity(), R.string.prompt_unlock_failed, Toast.LENGTH_LONG);
+                        Toast toast = Toast.makeText(getActivity().getApplicationContext(), R.string.prompt_unlock_failed, Toast.LENGTH_LONG);
                         toast.setGravity(Gravity.CENTER, 0, 0);
                         toast.show();
                     }
                 } else {
-                    Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity().getApplicationContext(), R.string.prompt_system_error, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(), R.string.prompt_system_error, Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
         }
@@ -839,6 +863,11 @@ public class UnlockFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String[] result) {
+
+            if (getActivity() == null || !(getActivity() instanceof UnlockActivity)) {
+                return;
+            }
+
             mSeal.setSealId(result[0]);
             mSeal.setSealNo(result[1]);
 
@@ -846,49 +875,20 @@ public class UnlockFragment extends Fragment {
         }
     }
 
-    private class ReverseGeocodingTask extends AsyncTask<Location, Void, String> {
-
+    private class ReverseGeocodingTask extends AsyncTask<String, Void, String> {
         @Override
-        protected String doInBackground(Location... params) {
+        protected String doInBackground(String... params) {
             Log.i(TAG, "ReverseGeocodingTask doInBackground");
 
             return performReverseGeocodingTask(params[0]);
         }
 
-//		private String performReverseGeocodingTask(Location location) {
-//
-//			SoapObject request = new SoapObject(Utils.getWsNamespace2(), Utils.getWsMethodOfGetGooglePosition());
-//
-//			request.addProperty(Utils.newPropertyInstance("googleCoordinate", String.format("%1$s,%2$s", String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude())), String.class));
-//			request.addProperty(Utils.newPropertyInstance("language", Utils.getCurrentLanguage(), String.class));
-//
-//			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-//			envelope.dotNet = true;
-//			envelope.setOutputSoapObject(request);
-//
-//			HttpTransportSE transport = new HttpTransportSE(Utils.getWsUrl2());
-//
-//			String responseJSON = null;
-//
-//			try {
-//				transport.call(Utils.getWsSoapAction2() + Utils.getWsMethodOfGetGooglePosition(), envelope);
-//
-//				SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
-//
-//				responseJSON = response.toString();
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//
-//			return responseJSON;
-//		}
-
-        private String performReverseGeocodingTask(Location location) {
+        private String performReverseGeocodingTask(String location) {
             GeocodingResult[] results;
 
             GeoApiContext contextG = new GeoApiContext().setApiKey("AIzaSyAp2aNol3FhJypghIA2IUZIOkNTwo6YPbY");
             try {
-                results = GeocodingApi.geocode(contextG, String.format("%1$f,%2$f", location.getLatitude(), location.getLongitude())).await();
+                results = GeocodingApi.geocode(contextG, location).await();
 
                 Log.d(TAG, results[0].formattedAddress);
             } catch (Exception e) {
@@ -904,7 +904,9 @@ public class UnlockFragment extends Fragment {
         protected void onPostExecute(String result) {
             Log.i(TAG, "ReverseGeocodingTask onPostExecute Result: " + result);
 
-            getActivity().setProgressBarIndeterminateVisibility(false);
+            if (getActivity() != null && getActivity() instanceof UnlockActivity) {
+                getActivity().setProgressBarIndeterminateVisibility(false);
+            }
 
             try {
                 if (result != null) {

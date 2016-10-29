@@ -34,7 +34,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baidu.location.BDLocation;
 import com.freight_track.android.nfcseal.R;
+import com.freight_track.android.nfcseal.common.NotiftLocationListener;
 import com.freight_track.android.nfcseal.model.Seal;
 import com.freight_track.android.nfcseal.model.User;
 import com.freight_track.android.nfcseal.common.Utils;
@@ -52,21 +54,34 @@ public class SignInFragment extends Fragment {
     private static String TAG = "SignInFragment";
     private Seal mSeal;
 
+    private LocationMaster mLocationMaster;
     private String mLastLocation;
     private String mLastAddress;
-
-    private LocationMaster mLocationMaster;
 
     private BroadcastReceiver mLocationReceiver = new LocationReceiver() {
         @Override
         protected void onLocationReceived(Context context, Location loc) {
-            Log.d(TAG, loc.toString());
-
             mLastLocation = String.format("%1$f,%2$f", loc.getLatitude(), loc.getLongitude());
             mLocationMaster.setLastCoordinate(mLastLocation);
 
+            Log.d(TAG, "Got location from GPS: " + mLastLocation);
+
             ReverseGeocodingTask task = new ReverseGeocodingTask();
-            task.execute(loc);
+            task.execute(mLastLocation);
+        }
+    };
+
+    private NotiftLocationListener mBDLocationListener = new NotiftLocationListener() {
+        @Override
+        public void onReceiveLocation(BDLocation loc) {
+            super.onReceiveLocation(loc);
+
+            mLastLocation = String.format("%1$f,%2$f", loc.getLatitude(), loc.getLongitude());
+
+            Log.d(TAG, "Got location from Baidu: " + mLastLocation);
+
+            mLocationMaster.setLastCoordinate(mLastLocation);
+            mLocationMaster.setAddress(loc.getAddress().address);
         }
     };
 
@@ -81,8 +96,6 @@ public class SignInFragment extends Fragment {
         mLocationMaster = LocationMaster.get(getActivity());
         mLastLocation = mLocationMaster.getLastCoordinate();
         mLastAddress = mLocationMaster.getAddress();
-
-//        mLocationMaster.startLocationUpdates(mLocationListener);
 
         Log.d(TAG, User.get().getTOKEN());
     }
@@ -118,6 +131,7 @@ public class SignInFragment extends Fragment {
         super.onStart();
 
         getActivity().registerReceiver(mLocationReceiver, new IntentFilter(LocationMaster.ACTION_LOCATION));
+        mLocationMaster.startLocationUpdates(mBDLocationListener);
     }
 
     @Override
@@ -149,6 +163,7 @@ public class SignInFragment extends Fragment {
         super.onStop();
 
         getActivity().unregisterReceiver(mLocationReceiver);
+        mLocationMaster.stopLocationUpdates(mBDLocationListener);
     }
 
     @Override
@@ -258,6 +273,10 @@ public class SignInFragment extends Fragment {
         protected void onPostExecute(String result) {
             Log.i(TAG, "SignInTask onPostExecute");
 
+            if (getActivity() != null && getActivity() instanceof SignInActivity) {
+                getActivity().setProgressBarIndeterminateVisibility(false);
+            }
+
             getActivity().setProgressBarIndeterminateVisibility(false);
 
             try {
@@ -277,15 +296,15 @@ public class SignInFragment extends Fragment {
 
                         getActivity().finish();
                     } else {
-                        Toast toast = Toast.makeText(getActivity(), R.string.prompt_signin_failed, Toast.LENGTH_LONG);
+                        Toast toast = Toast.makeText(getActivity().getApplicationContext(), R.string.prompt_signin_failed, Toast.LENGTH_LONG);
                         toast.setGravity(Gravity.CENTER, 0, 0);
                         toast.show();
                     }
                 } else {
-                    Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity().getApplicationContext(), R.string.prompt_system_error, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                Toast.makeText(getActivity(), R.string.prompt_system_error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(), R.string.prompt_system_error, Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
         }
@@ -339,6 +358,11 @@ public class SignInFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String[] result) {
+
+            if (getActivity() != null && getActivity() instanceof SignInActivity) {
+                getActivity().setProgressBarIndeterminateVisibility(false);
+            }
+
             mSeal.setSealId(result[0]);
             mSeal.setSealNo(result[1]);
 
@@ -346,21 +370,20 @@ public class SignInFragment extends Fragment {
         }
     }
 
-    private class ReverseGeocodingTask extends AsyncTask<Location, Void, String> {
-
+    private class ReverseGeocodingTask extends AsyncTask<String, Void, String> {
         @Override
-        protected String doInBackground(Location... params) {
+        protected String doInBackground(String... params) {
             Log.i(TAG, "ReverseGeocodingTask doInBackground");
 
             return performReverseGeocodingTask(params[0]);
         }
 
-        private String performReverseGeocodingTask(Location location) {
+        private String performReverseGeocodingTask(String location) {
             GeocodingResult[] results;
 
             GeoApiContext contextG = new GeoApiContext().setApiKey("AIzaSyAp2aNol3FhJypghIA2IUZIOkNTwo6YPbY");
             try {
-                results = GeocodingApi.geocode(contextG, String.format("%1$f,%2$f", location.getLatitude(), location.getLongitude())).await();
+                results = GeocodingApi.geocode(contextG, location).await();
 
                 Log.d(TAG, results[0].formattedAddress);
             } catch (Exception e) {
@@ -375,6 +398,10 @@ public class SignInFragment extends Fragment {
         @Override
         protected void onPostExecute(String result) {
             Log.i(TAG, "ReverseGeocodingTask onPostExecute Result: " + result);
+
+            if (getActivity() != null && getActivity() instanceof SignInActivity) {
+                getActivity().setProgressBarIndeterminateVisibility(false);
+            }
 
             try {
                 if (getActivity() instanceof SignInActivity) {
