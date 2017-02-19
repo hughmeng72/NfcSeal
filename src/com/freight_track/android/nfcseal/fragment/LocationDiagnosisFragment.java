@@ -1,13 +1,5 @@
 package com.freight_track.android.nfcseal.fragment;
 
-import java.util.Date;
-
-import org.ksoap2.SoapEnvelope;
-import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapPrimitive;
-import org.ksoap2.serialization.SoapSerializationEnvelope;
-import org.ksoap2.transport.HttpTransportSE;
-
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Fragment;
@@ -35,13 +27,15 @@ import android.widget.Toast;
 import com.baidu.location.BDLocation;
 import com.freight_track.android.nfcseal.R;
 import com.freight_track.android.nfcseal.activity.LocationDiagnosisActivity;
-import com.freight_track.android.nfcseal.common.NotiftLocationListener;
-import com.freight_track.android.nfcseal.common.Utils;
 import com.freight_track.android.nfcseal.common.LocationMaster;
 import com.freight_track.android.nfcseal.common.LocationReceiver;
+import com.freight_track.android.nfcseal.common.NotiftLocationListener;
+import com.freight_track.android.nfcseal.common.Utils;
 import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
 import com.google.maps.model.GeocodingResult;
+
+import java.util.Date;
 
 public class LocationDiagnosisFragment extends Fragment {
 

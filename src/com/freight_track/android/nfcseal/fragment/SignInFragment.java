@@ -197,11 +197,7 @@ public class SignInFragment extends Fragment {
             mSeal.setLocation(mLastLocation);
         }
 
-        if (mLastAddress == null || mLastAddress.isEmpty()) {
-            mSeal.setPlace(getString(R.string.words_missed_address_prefix) + mSeal.getLocation() + getString(R.string.words_missed_address_suffix));
-        } else {
-            mSeal.setPlace(mLastAddress);
-        }
+        mSeal.setPlace(mLastAddress);
 
         if (Utils.isNetworkConnected(getActivity())) {
             getActivity().setProgressBarIndeterminateVisibility(true);

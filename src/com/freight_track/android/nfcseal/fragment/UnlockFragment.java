@@ -396,11 +396,7 @@ public class UnlockFragment extends Fragment {
             mSeal.setLocation(mLastLocation);
         }
 
-        if (Utils.getCurrentLanguage().equals("en-US") && (mLastAddress == null || mLastAddress.isEmpty())) {
-            mSeal.setPlace(getString(R.string.words_missed_address_prefix) + mSeal.getLocation() + getString(R.string.words_missed_address_suffix));
-        } else {
-            mSeal.setPlace(mLastAddress);
-        }
+        mSeal.setPlace(mLastAddress);
 
         if (mSeal.getTagId() == null || mSeal.getTagId().isEmpty()) {
             Toast toast = Toast.makeText(getActivity(), R.string.prompt_no_available_tag, Toast.LENGTH_SHORT);

@@ -224,6 +224,12 @@ public class OperationListFragment extends ListFragment {
 							}
 						}
 
+						// Embed mode
+//						url = "<iframe width=\"100%\" height=\"100%\" frameborder=\"0\" style=\"border:0\" src=\"https://www.google.com/maps/embed/v1/place?key=AIzaSyAp2aNol3FhJypghIA2IUZIOkNTwo6YPbY&q=Space+Needle,Seattle+WA\" allowfullscreen></iframe>";
+
+						// JS mode
+//						url = buildHtml();
+
 						i.putExtra(webFragment.EXTRA_OPERATION_ID, url);
 						startActivity(i);
 						
@@ -323,6 +329,73 @@ public class OperationListFragment extends ListFragment {
 
 			return convertView;
 		}
+	}
+
+	private String buildHtml() {
+		String html = "";
+
+        html += "<!DOCTYPE html>";
+        html += "<html>";
+        html += "<head>";
+        html += "<meta charset='utf-8'>";
+        html += "<style>";
+        html += "#map {height: 100%;}";
+        html += "html, body {height: 100%;margin: 0;padding: 0;}";
+        html += "</style>";
+        html += "</head>";
+        html += "<body>";
+        html += "<div id='map'></div>";
+        html += "<script>";
+        html += "var neighborhoods = [";
+        html += "{lat: 52.511, lng: 13.447},";
+        html += "{lat: 52.549, lng: 13.422},";
+        html += "{lat: 52.497, lng: 13.396},";
+        html += "{lat: 52.517, lng: 13.394}";
+        html += "];";
+        html += "var markers = [];";
+        html += "var map;";
+        html += "function initMap() {";
+        html += "map = new google.maps.Map(document.getElementById('map'), {";
+        html += "zoom: 12,";
+        html += "center: {lat: 52.520, lng: 13.410}";
+        html += "});";
+        html += "drop();";
+        html += "var flightPath = new google.maps.Polyline({";
+        html += "path: neighborhoods,";
+        html += "geodesic: true,";
+        html += "strokeColor: '#FF0000',";
+        html += "strokeOpacity: 1.0,";
+        html += "strokeWeight: 2";
+        html += "});";
+        html += "flightPath.setMap(map);";
+        html += "}";
+        html += "function drop() {";
+        html += "clearMarkers();";
+        html += "for (var i = 0; i < neighborhoods.length; i++) {";
+        html += "addMarkerWithTimeout(neighborhoods[i], i * 200);";
+        html += "}";
+        html += "}";
+        html += "function addMarkerWithTimeout(position, timeout) {";
+        html += "window.setTimeout(function() {";
+        html += "markers.push(new google.maps.Marker({";
+        html += "position: position,";
+        html += "map: map,";
+        html += "animation: google.maps.Animation.DROP";
+        html += "}));";
+        html += "}, timeout);";
+        html += "}";
+        html += "function clearMarkers() {";
+        html += "for (var i = 0; i < markers.length; i++) {";
+        html += "markers[i].setMap(null);";
+        html += "}";
+        html += "markers = [];";
+        html += "}";
+        html += "</script>";
+        html += "<script async defer src='https://maps.googleapis.com/maps/api/js?key=AIzaSyAp2aNol3FhJypghIA2IUZIOkNTwo6YPbY&callback=initMap'></script>";
+        html += "</body>";
+        html += "</html>";
+
+		return html;
 	}
 
 	private class OperationLoadTask extends AsyncTask<Integer, Void, String> {

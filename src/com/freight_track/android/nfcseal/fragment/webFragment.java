@@ -44,9 +44,11 @@ public class webFragment extends Fragment {
 //		settings.setPluginState(WebSettings.PluginState.ON);
 //		settings.setSupportZoom(true);
 //		settings.setBuiltInZoomControls(true);
-		
+
 		webView.loadUrl(url);
-		
+
+        // Load html content
+//		webView.loadData(url, "text/html", null);
 		
 		return v;
 	}

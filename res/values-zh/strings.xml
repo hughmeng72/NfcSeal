@@ -91,7 +91,4 @@
 	<string name="label_about_us">关于我们</string>
 	<string name="label_submit_feedbacks">意见反馈</string>
 	<string name="label_exception_reason">异常原因：</string>
-	<string name="words_missed_address_prefix">坐标</string>
-	<string name="words_missed_address_suffix">对应的地址待解析。</string>
-								
 </resources>

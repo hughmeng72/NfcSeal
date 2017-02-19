@@ -90,8 +90,5 @@
 	<string name="label_about_us">About Us</string>
 	<string name="label_submit_feedbacks">Submit Feedbacks</string>
 	<string name="label_exception_reason">Reason</string>
-	<string name="prompt_address_missed">Location address hasn\'t been parsed yet, please wait a minute...</string>
-	<string name="words_missed_address_prefix">The address of coordinate&#160;</string>
-	<string name="words_missed_address_suffix">&#160;hasn\'t been parsed yet.</string>
-		
+
 </resources>
