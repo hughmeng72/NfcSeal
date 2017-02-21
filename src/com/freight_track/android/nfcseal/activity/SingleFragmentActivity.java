@@ -12,6 +12,8 @@ import com.baidu.location.LocationClientOption;
 import com.freight_track.android.nfcseal.R;
 import com.freight_track.android.nfcseal.common.LocationMaster;
 import com.freight_track.android.nfcseal.common.NotiftLocationListener;
+import com.freight_track.android.nfcseal.update.UpdateHelper;
+import com.freight_track.android.nfcseal.update.listener.ForceListener;
 
 public abstract class SingleFragmentActivity extends Activity {
     protected abstract Fragment createFragment();
@@ -30,5 +32,17 @@ public abstract class SingleFragmentActivity extends Activity {
                 .add(R.id.fragmentContainer, fragment)
                 .commit();
         }
+
+        checkUpdate();
     }
-}
+
+    private void checkUpdate() {
+        UpdateHelper.getInstance().setForceListener(new ForceListener() {
+            @Override
+            public void onUserCancel(boolean force) {
+                if (force) {
+                    finish();
+                }
+            }
+        }).check(this);
+    }}

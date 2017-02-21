@@ -11,11 +11,30 @@ apply plugin: 'android'
 dependencies {
     compile fileTree(include: '*.jar', dir: 'libs')
     compile 'com.google.maps:google-maps-services:0.1.16'
+    compile 'com.dou361.download:jjdxm-download:1.0.3'
 }
 
 android {
     compileSdkVersion 21
     buildToolsVersion "21.1.0"
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            android.applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+                    def padVersionCode = variant.versionCode.toString();
+                    padVersionCode = padVersionCode.padLeft(3, '0')
+                    def newApkName = "NfcSeal" + "_${padVersionCode}-${variant.versionName}"
+
+                    newApkName = newApkName + ".apk"
+                    output.outputFile = new File(output.outputFile.parent, newApkName)
+                }
+            }
+        }
+    }
 
     sourceSets {
         main {

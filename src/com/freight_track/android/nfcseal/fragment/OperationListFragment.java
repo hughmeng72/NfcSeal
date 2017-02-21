@@ -162,7 +162,7 @@ public class OperationListFragment extends ListFragment {
 
 		@SuppressWarnings("deprecation")
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
+		public View getView(final int position, View convertView, ViewGroup parent) {
 
 			if (convertView == null) {
 				convertView = getActivity().getLayoutInflater().inflate(R.layout.list_item_operation, null);
@@ -210,32 +210,28 @@ public class OperationListFragment extends ListFragment {
 							}
 						}
 						else {
-							if (display.getWidth() == 1080) {
-								
-								if (display.getHeight() == 1920) {
-									url = String.format("http://dev.freight-track.com/baidumap/NFCPoint_google.aspx?mapCenter=%s&mobileWidth=%d&mobileHight=%d&Token=%s", operation.getCoordinate(), 343, 597, User.get().getTOKEN());
-								}
-								else {
-									url = String.format("http://dev.freight-track.com/baidumap/NFCPoint_google.aspx?mapCenter=%s&mobileWidth=%d&mobileHight=%d&Token=%s", operation.getCoordinate(), 343, 550, User.get().getTOKEN());
-								}
-							}
-							else {
-								url = String.format("http://dev.freight-track.com/baidumap/NFCPoint_google.aspx?mapCenter=%s&mobileWidth=%d&mobileHight=%d&Token=%s", operation.getCoordinate(), display.getWidth(), display.getHeight(), User.get().getTOKEN());
-							}
-						}
+//							if (display.getWidth() == 1080) {
+//
+//								if (display.getHeight() == 1920) {
+//									url = String.format("http://dev.freight-track.com/baidumap/NFCPoint_google.aspx?mapCenter=%s&mobileWidth=%d&mobileHight=%d&Token=%s", operation.getCoordinate(), 343, 597, User.get().getTOKEN());
+//								}
+//								else {
+//									url = String.format("http://dev.freight-track.com/baidumap/NFCPoint_google.aspx?mapCenter=%s&mobileWidth=%d&mobileHight=%d&Token=%s", operation.getCoordinate(), 343, 550, User.get().getTOKEN());
+//								}
+//							}
+//							else {
+//								url = String.format("http://dev.freight-track.com/baidumap/NFCPoint_google.aspx?mapCenter=%s&mobileWidth=%d&mobileHight=%d&Token=%s", operation.getCoordinate(), display.getWidth(), display.getHeight(), User.get().getTOKEN());
+//							}
 
-						// Embed mode
+                            // Embed mode
 //						url = "<iframe width=\"100%\" height=\"100%\" frameborder=\"0\" style=\"border:0\" src=\"https://www.google.com/maps/embed/v1/place?key=AIzaSyAp2aNol3FhJypghIA2IUZIOkNTwo6YPbY&q=Space+Needle,Seattle+WA\" allowfullscreen></iframe>";
 
-						// JS mode
-//						url = buildHtml();
+                            // JS mode
+                            url = buildHtml(position);
+						}
 
 						i.putExtra(webFragment.EXTRA_OPERATION_ID, url);
 						startActivity(i);
-						
-//						// Call Android AMap SDK, Not in use yet. 3/26/2015
-//						GetAdjustedCoordinateTask task = new GetAdjustedCoordinateTask();
-//						task.execute(operation.getCoordinate());
 					}
 				});
 			}
@@ -331,8 +327,26 @@ public class OperationListFragment extends ListFragment {
 		}
 	}
 
-	private String buildHtml() {
+	private String buildHtml(int position) {
 		String html = "";
+		String coordinates = "";
+		String centerCoordinate = "";
+
+		for(WsResultOperation op : mOperations) {
+			if (!(op.getCoordinate() == null || op.getCoordinate().isEmpty())) {
+				String[] coordinate = op.getCoordinate().split(",");
+				coordinates += String.format("{lat: %s, lng: %s},", coordinate[0], coordinate[1]);
+			}
+		}
+
+		if (!coordinates.isEmpty()) {
+			coordinates = coordinates.substring(0, coordinates.length()-1);
+		}
+
+        if (!(mOperations.get(position).getCoordinate() == null || mOperations.get(position).getCoordinate().isEmpty()) ) {
+            String[] coordinate = mOperations.get(position).getCoordinate().split(",");
+            centerCoordinate += String.format("{lat: %s, lng: %s}", coordinate[0], coordinate[1]);
+        }
 
         html += "<!DOCTYPE html>";
         html += "<html>";
@@ -347,17 +361,19 @@ public class OperationListFragment extends ListFragment {
         html += "<div id='map'></div>";
         html += "<script>";
         html += "var neighborhoods = [";
-        html += "{lat: 52.511, lng: 13.447},";
-        html += "{lat: 52.549, lng: 13.422},";
-        html += "{lat: 52.497, lng: 13.396},";
-        html += "{lat: 52.517, lng: 13.394}";
+//        html += "{lat: 52.511, lng: 13.447},";
+//        html += "{lat: 52.549, lng: 13.422},";
+//        html += "{lat: 52.497, lng: 13.396},";
+//        html += "{lat: 52.517, lng: 13.394}";
+		html += coordinates;
         html += "];";
         html += "var markers = [];";
         html += "var map;";
         html += "function initMap() {";
         html += "map = new google.maps.Map(document.getElementById('map'), {";
         html += "zoom: 12,";
-        html += "center: {lat: 52.520, lng: 13.410}";
+//        html += "center: {lat: 52.520, lng: 13.410}";
+        html += "center: " + centerCoordinate;
         html += "});";
         html += "drop();";
         html += "var flightPath = new google.maps.Polyline({";

@@ -200,6 +200,10 @@ public class Utils {
 	  public static boolean isDouble(String str) {
 	    Pattern pattern = Pattern.compile("^[-\\+]?[.\\d]*$");    
 	    return pattern.matcher(str).matches();    
-	  }  
-	  
+	  }
+
+	public static String getUpdateCheckUrl() {
+		return getWsNamespace() + "Update/UpdateCheck.aspx";
+	}
+
 }

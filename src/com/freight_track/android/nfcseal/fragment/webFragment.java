@@ -9,6 +9,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.freight_track.android.nfcseal.R;
+import com.freight_track.android.nfcseal.common.Utils;
 
 public class webFragment extends Fragment {
 
@@ -45,11 +46,15 @@ public class webFragment extends Fragment {
 //		settings.setSupportZoom(true);
 //		settings.setBuiltInZoomControls(true);
 
-		webView.loadUrl(url);
+        if (Utils.getCurrentLanguage().equals("zh-CN"))  {
+            webView.loadUrl(url);
+        }
+        else {
+            // Load html content
+            //		webView.loadData(url, "text/html", null);
+            webView.loadDataWithBaseURL(null, url, "text/html", "utf-8", null);
+        }
 
-        // Load html content
-//		webView.loadData(url, "text/html", null);
-		
 		return v;
 	}
 
