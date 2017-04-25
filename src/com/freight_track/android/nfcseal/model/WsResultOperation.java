@@ -1,11 +1,13 @@
 package com.freight_track.android.nfcseal.model;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.freight_track.android.nfcseal.R;
 
 
-public class WsResultOperation {
+public class WsResultOperation implements Parcelable {
 
 	public enum OperationTypeEnum {
 		unknown, lock, unlock, signIn, exceptional
@@ -19,6 +21,7 @@ public class WsResultOperation {
 	private String ImgNames;
 	private String ExceptionCause;
 	private String Coordinate;
+	private boolean selected;
 
 
 	public WsResultOperation() {
@@ -131,4 +134,53 @@ public class WsResultOperation {
 		return ret;
 	}
 
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.OperateId);
+        dest.writeString(this.OperateTime);
+        dest.writeInt(this.SealOperate);
+        dest.writeString(this.Place);
+        dest.writeString(this.Operator);
+        dest.writeString(this.ImgNames);
+        dest.writeString(this.ExceptionCause);
+        dest.writeString(this.Coordinate);
+        dest.writeByte(this.selected ? (byte) 1 : (byte) 0);
+    }
+
+    protected WsResultOperation(Parcel in) {
+        this.OperateId = in.readInt();
+        this.OperateTime = in.readString();
+        this.SealOperate = in.readInt();
+        this.Place = in.readString();
+        this.Operator = in.readString();
+        this.ImgNames = in.readString();
+        this.ExceptionCause = in.readString();
+        this.Coordinate = in.readString();
+        this.selected = in.readByte() != 0;
+    }
+
+    public static final Creator<WsResultOperation> CREATOR = new Creator<WsResultOperation>() {
+        @Override
+        public WsResultOperation createFromParcel(Parcel source) {
+            return new WsResultOperation(source);
+        }
+
+        @Override
+        public WsResultOperation[] newArray(int size) {
+            return new WsResultOperation[size];
+        }
+    };
 }

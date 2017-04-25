@@ -48,7 +48,7 @@ public class LocationMaster {
 
         LocationClientOption option = new LocationClientOption();
         option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
-        option.setScanSpan(60 * 1000);
+        option.setScanSpan(10 * 1000);
         option.setOpenGps(true);
         option.setIsNeedAddress(true);
         mLocationClient = new LocationClient(mAppContext);

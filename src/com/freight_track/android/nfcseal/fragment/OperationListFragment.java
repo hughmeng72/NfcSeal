@@ -1,16 +1,5 @@
 package com.freight_track.android.nfcseal.fragment;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-
-import org.ksoap2.SoapEnvelope;
-import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapPrimitive;
-import org.ksoap2.serialization.SoapSerializationEnvelope;
-import org.ksoap2.transport.HttpTransportSE;
-
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.FragmentManager;
@@ -26,7 +15,6 @@ import android.os.Handler;
 import android.os.StrictMode;
 import android.text.Html;
 import android.util.Log;
-import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -36,15 +24,28 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.freight_track.android.nfcseal.common.PictureUtils;
 import com.freight_track.android.nfcseal.R;
+import com.freight_track.android.nfcseal.activity.BaiduMapActivity;
+import com.freight_track.android.nfcseal.activity.webActivity;
+import com.freight_track.android.nfcseal.common.PictureUtils;
 import com.freight_track.android.nfcseal.common.ThumbnailDownloader;
-import com.freight_track.android.nfcseal.model.User;
 import com.freight_track.android.nfcseal.common.Utils;
+import com.freight_track.android.nfcseal.model.User;
 import com.freight_track.android.nfcseal.model.WsResult;
 import com.freight_track.android.nfcseal.model.WsResultOperation;
-import com.freight_track.android.nfcseal.activity.webActivity;
 import com.google.gson.Gson;
+
+import org.ksoap2.SoapEnvelope;
+import org.ksoap2.serialization.SoapObject;
+import org.ksoap2.serialization.SoapPrimitive;
+import org.ksoap2.serialization.SoapSerializationEnvelope;
+import org.ksoap2.transport.HttpTransportSE;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OperationListFragment extends ListFragment {
 
@@ -156,7 +157,7 @@ public class OperationListFragment extends ListFragment {
 
 	private class OperationAdapter extends ArrayAdapter<WsResultOperation> {
 
-		public OperationAdapter(ArrayList<WsResultOperation> operations) {
+		public OperationAdapter(List<WsResultOperation> operations) {
 			super(getActivity(), android.R.layout.simple_list_item_1, operations);
 		}
 
@@ -187,51 +188,23 @@ public class OperationListFragment extends ListFragment {
 					
 					@Override
 					public void onClick(View v) {
-						Intent i = new Intent(getActivity(), webActivity.class);
-						
-						Display display = getActivity().getWindowManager().getDefaultDisplay();
-						
-						Log.i(TAG, "Mobile device width = " + String.valueOf(display.getWidth() + ", height = " + String.valueOf(display.getHeight())));
-						
-						String url;
-						
+
+                        setupCurrentPosition(position);
+
 						if (Utils.getCurrentLanguage().equals("zh-CN")) {
-							if (display.getWidth() == 1080) {
-								
-								if (display.getHeight() == 1920) {
-									url = String.format("http://www.freight-track.com/baidumap/NFCPoint.aspx?Coordinate=%s&mobileWidth=%d&mobileHight=%d&Token=%s", operation.getCoordinate(), 343, 597, User.get().getTOKEN());
-								}
-								else {
-									url = String.format("http://www.freight-track.com/baidumap/NFCPoint.aspx?Coordinate=%s&mobileWidth=%d&mobileHight=%d&Token=%s", operation.getCoordinate(), 343, 550, User.get().getTOKEN());
-								}
-							}
-							else {
-								url = String.format("http://www.freight-track.com/baidumap/NFCPoint.aspx?Coordinate=%s&mobileWidth=%d&mobileHight=%d&Token=%s", operation.getCoordinate(), display.getWidth(), display.getHeight(), User.get().getTOKEN());
-							}
+                            Intent i = new Intent(getActivity(), BaiduMapActivity.class);
+                            i.putExtra(BaiduMapFragment.EXTRA_OPERATIONS, mOperations);
+                            startActivity(i);
 						}
 						else {
-//							if (display.getWidth() == 1080) {
-//
-//								if (display.getHeight() == 1920) {
-//									url = String.format("http://dev.freight-track.com/baidumap/NFCPoint_google.aspx?mapCenter=%s&mobileWidth=%d&mobileHight=%d&Token=%s", operation.getCoordinate(), 343, 597, User.get().getTOKEN());
-//								}
-//								else {
-//									url = String.format("http://dev.freight-track.com/baidumap/NFCPoint_google.aspx?mapCenter=%s&mobileWidth=%d&mobileHight=%d&Token=%s", operation.getCoordinate(), 343, 550, User.get().getTOKEN());
-//								}
-//							}
-//							else {
-//								url = String.format("http://dev.freight-track.com/baidumap/NFCPoint_google.aspx?mapCenter=%s&mobileWidth=%d&mobileHight=%d&Token=%s", operation.getCoordinate(), display.getWidth(), display.getHeight(), User.get().getTOKEN());
-//							}
-
-                            // Embed mode
-//						url = "<iframe width=\"100%\" height=\"100%\" frameborder=\"0\" style=\"border:0\" src=\"https://www.google.com/maps/embed/v1/place?key=AIzaSyAp2aNol3FhJypghIA2IUZIOkNTwo6YPbY&q=Space+Needle,Seattle+WA\" allowfullscreen></iframe>";
+                            Intent i = new Intent(getActivity(), webActivity.class);
 
                             // JS mode
-                            url = buildHtml(position);
-						}
+                            String url = buildHtml(position);
 
-						i.putExtra(webFragment.EXTRA_OPERATION_ID, url);
-						startActivity(i);
+                            i.putExtra(webFragment.EXTRA_OPERATION_ID, url);
+                            startActivity(i);
+						}
 					}
 				});
 			}
@@ -325,7 +298,13 @@ public class OperationListFragment extends ListFragment {
 
 			return convertView;
 		}
-	}
+
+        private void setupCurrentPosition(final int position) {
+            for(int i = 0; i < mOperations.size(); i++) {
+                mOperations.get(i).setSelected(i == position);
+            }
+        }
+    }
 
 	private String buildHtml(int position) {
 		String html = "";
@@ -361,10 +340,6 @@ public class OperationListFragment extends ListFragment {
         html += "<div id='map'></div>";
         html += "<script>";
         html += "var neighborhoods = [";
-//        html += "{lat: 52.511, lng: 13.447},";
-//        html += "{lat: 52.549, lng: 13.422},";
-//        html += "{lat: 52.497, lng: 13.396},";
-//        html += "{lat: 52.517, lng: 13.394}";
 		html += coordinates;
         html += "];";
         html += "var markers = [];";
@@ -372,7 +347,6 @@ public class OperationListFragment extends ListFragment {
         html += "function initMap() {";
         html += "map = new google.maps.Map(document.getElementById('map'), {";
         html += "zoom: 12,";
-//        html += "center: {lat: 52.520, lng: 13.410}";
         html += "center: " + centerCoordinate;
         html += "});";
         html += "drop();";
